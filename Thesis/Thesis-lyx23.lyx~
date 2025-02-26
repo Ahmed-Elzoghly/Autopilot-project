@@ -1,0 +1,2369 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass report
+\begin_preamble
+\PassOptionsToPackage{hyphens}{url}
+
+\usepackage{pdflscape}
+\usepackage{multicol}
+\usepackage{appendix}
+\usepackage{notoccite}	%This is to ignore citations in toc, lof and lot when ordering the references
+\usepackage{fancyhdr}
+\usepackage{afterpage}
+\usepackage{dpfloat}
+\usepackage[labelformat=simple]{subcaption}
+\usepackage{thmtools}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{chngcntr}
+\usepackage{realboxes}
+\usepackage{xpatch}
+
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\linewidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+%Improve the appearance of references to subcaption
+\renewcommand\thesubfigure{(\alph{subfigure})}
+
+%To use symbols for footnotes
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+%To reset footnote numbering every page
+\counterwithin*{footnote}{page}
+
+%%Redefine the plain page style to avoid violating it at every \chapter{} command
+%\fancypagestyle{plain}{%
+%\fancyhf{} % clear all header and footer fields
+%\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\footrulewidth}{0pt}}
+
+\allowdisplaybreaks
+
+% for correct jump positions whe clicking on a link to a float
+\usepackage[figure]{hypcap}
+
+% used to have extra space in table cells
+\@ifundefined{extrarowheight}
+ {\usepackage{array}}{}
+\setlength{\extrarowheight}{2pt}
+
+% workaround for a makeindex bug,
+% see sec. "Index Entry Order"
+% only uncomment this when you are using makindex
+%\let\OrgIndex\index 
+%\renewcommand*{\index}[1]{\OrgIndex{#1}}
+
+\newcommand*{\blankpage}{%
+  \begin{otherlanguage}{english}
+    \vspace*{\fill}
+%    \hfill
+    \begin{center}
+      \emph{This page is intentionally left blank!}
+    \end{center}
+    \vspace{\fill}
+%    \thispagestyle{empty}
+  \end{otherlanguage}
+  \clearpage
+}
+
+\newcommand*\plainClearToLeftPage{%
+  \clearpage
+  \ifodd\value{page}
+
+    \vspace*{\fill}
+%    \hfill
+    \vspace{\fill}
+
+  \fi
+}
+
+%A more complex version that supports two-column
+%\makeatletter
+%\newcommand*{\cleartoleftpage}{%
+%  \clearpage
+%    \if@twoside
+%    \ifodd\c@page
+%      \hbox{}\newpage
+%      \if@twocolumn
+%        \hbox{}\newpage
+%      \fi
+%    \fi
+%  \fi
+%}
+%\makeatother
+
+\makeatletter
+\renewcommand*\cleardoublepage{\clearpage%
+    \if@twoside
+        \ifodd\c@page\else
+        \blankpage
+        \fi
+    \fi
+}
+\makeatother
+
+\makeatletter % Redefinition of Description List Items source: http://tex.stackexchange.com/a/1248/13552
+\let\orgdescriptionlabel\descriptionlabel
+\renewcommand*{\descriptionlabel}[1]{%
+  \let\orglabel\label
+  \let\label\@gobble
+  \phantomsection
+  \protected@edef\@currentlabel{#1}%
+  %\edef\@currentlabelname{#1}%
+  \let\label\orglabel
+  \orgdescriptionlabel{#1}%
+}
+\makeatother
+
+\let\mySection\section\renewcommand{\section}{\suppressfloats[t]\mySection}
+
+\let\mySubSection\subsection\renewcommand{\subsection}{\suppressfloats[t]\mySubSection}
+
+\makeatletter
+\xpretocmd\lstinline{\Colorbox{lightgray}\bgroup\appto\lst@DeInit{\egroup}}{}{}
+\makeatother
+\end_preamble
+\options hyphens,openright,refpage,intoc,bibliography=totoc
+\use_default_options true
+\begin_modules
+theorems-ams-bytype
+theorems-chap-bytype
+multicol
+logicalmkup
+enumitem
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding utf8
+\fontencoding default
+\font_roman "tgtermes" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement t
+\paperfontsize 12
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered true
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 3
+\pdf_breaklinks true
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
+\pdf_quoted_options "linkcolor=blue,anchorcolor=blue,filecolor=blue,menucolor=blue,runcolor=blue,urlcolor=blue,citecolor=blue,pdfpagelayout=TwoPageRight,pdfstartview=Fit"
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 0
+\use_package esint 0
+\use_package mathdots 1
+\use_package mathtools 0
+\use_package mhchem 1
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style unsrt
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\branch Arabic
+\selected 0
+\filename_suffix 0
+\color #faf0e6
+\end_branch
+\branch No Arabic
+\selected 1
+\filename_suffix 0
+\color #faf0e6
+\end_branch
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3.5cm
+\topmargin 2.5cm
+\rightmargin 2.5cm
+\bottommargin 2.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle empty
+\listings_params "breaklines=true,commentstyle={\color[rgb]{0,0.5,0}},keywordstyle={\color{blue}},stringstyle={\color{magenta}},tabsize=4,basicstyle={\ttfamily},columns=fullflexible"
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{titlepage}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename FE-Logo.png
+	height 3cm
+
+\end_inset
+
+
+\begin_inset space \hfill{}
+\end_inset
+
+
+\begin_inset Graphics
+	filename CU-Pharonic Logo2.png
+	height 3cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{centering}%
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 1cm*
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+\size larger
+SAMPLE THESIS CREATED BY USING \SpecialChar LyX
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size larger
+By
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size larger
+Ahmed Mohamed Rashed Desoki
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+A Thesis Submitted to the
+\begin_inset Newline newline
+\end_inset
+
+Faculty of Engineering at Cairo University
+\begin_inset Newline newline
+\end_inset
+
+in Partial Fulfillment of the
+\begin_inset Newline newline
+\end_inset
+
+Requirements for the Degree of
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+MASTER OF SCIENCE
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+in
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+Aerospace Engineering
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+FACULTY OF ENGINEERING, CAIRO UNIVERSITY
+\begin_inset Newline newline
+\end_inset
+
+GIZA, EGYPT
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+August, 2020
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+par
+\backslash
+end{centering}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{titlepage}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand input
+filename "CreatedBy.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{centering}%
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+\size larger
+SAMPLE THESIS CREATED BY USING \SpecialChar LyX
+
+\begin_inset Branch Arabic
+inverted 0
+status open
+
+\begin_layout Standard
+\noindent
+
+\series bold
+\size larger
+ WITH ARABIC SUPPORT
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size larger
+By
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size larger
+Ahmed Mohamed Rashed Desoki
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+A Thesis Submitted to the
+\begin_inset Newline newline
+\end_inset
+
+Faculty of Engineering at Cairo University
+\begin_inset Newline newline
+\end_inset
+
+in Partial Fulfillment of the
+\begin_inset Newline newline
+\end_inset
+
+Requirements for the Degree of
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+MASTER OF SCIENCE
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+in
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+Aerospace Engineering
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+Under the Supervision of
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Flex Multiple Columns
+status open
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100line%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\size large
+Prof.
+ Name1 Name1 Name1
+\end_layout
+
+\begin_layout Plain Layout
+
+\size large
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Professor
+\end_layout
+
+\begin_layout Plain Layout
+Aerospace Engineering Department
+\end_layout
+
+\begin_layout Plain Layout
+Faculty of Engineering, Cairo University
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100line%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\size large
+Prof.
+ Name2 Name2 Name2
+\end_layout
+
+\begin_layout Plain Layout
+
+\size large
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Associate Professor
+\end_layout
+
+\begin_layout Plain Layout
+Aerospace Engineering Department
+\end_layout
+
+\begin_layout Plain Layout
+Faculty of Engineering, Cairo University
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size large
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100line%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\size large
+Prof.
+ Name3 Name3 Name3
+\end_layout
+
+\begin_layout Plain Layout
+
+\size large
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Assistant Professor
+\end_layout
+
+\begin_layout Plain Layout
+Aerospace Engineering Department
+\end_layout
+
+\begin_layout Plain Layout
+Faculty of Engineering, Cairo University
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+FACULTY OF ENGINEERING, CAIRO UNIVERSITY
+\begin_inset Newline newline
+\end_inset
+
+GIZA, EGYPT
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+August, 2020
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\series bold
+\size larger
+SAMPLE THESIS CREATED BY USING \SpecialChar LyX
+
+\begin_inset Branch Arabic
+inverted 0
+status open
+
+\begin_layout Standard
+\noindent
+
+\series bold
+\size larger
+ WITH ARABIC SUPPORT
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size larger
+By
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size larger
+Ahmed Mohamed Rashed Desoki
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+A Thesis Submitted to the
+\begin_inset Newline newline
+\end_inset
+
+Faculty of Engineering at Cairo University
+\begin_inset Newline newline
+\end_inset
+
+in Partial Fulfillment of the
+\begin_inset Newline newline
+\end_inset
+
+Requirements for the Degree of
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+MASTER OF SCIENCE
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+in
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+Aerospace Engineering
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+par
+\backslash
+end{centering}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+Approved by the Examining Committee
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="1">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size large
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size large
+Prof.
+ Name1 Name1 Name1, thesis main advisor
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size large
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size large
+Associate Prof.
+ Name3 Name3 Name3, internal examiner
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size large
+\begin_inset VSpace 0.5cm
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size large
+Prof.
+ Name4 Name4 Name4, external examiner, National Research Center
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{centering}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+FACULTY OF ENGINEERING, CAIRO UNIVERSITY
+\begin_inset Newline newline
+\end_inset
+
+GIZA, EGYPT
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size large
+August, 2020
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+par
+\backslash
+end{centering}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+columnseprule}{1pt}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%To remove all vertical spaces between different kinds of lists (enumerate,
+ itemize, description)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlist{nosep}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%To force breaking long URL's
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+sloppy
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+phantomsection
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{chapter}{Abstract}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter*
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:Abstract"
+
+\end_inset
+
+Abstract
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagenumbering{roman}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagestyle{plain}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I'm Ahmed Mohamed Rashed Desoki, an assistant professor at Aerospace Engineering
+ Department, Cairo University.
+\end_layout
+
+\begin_layout Standard
+I created this thesis template to show you how you can create a professional
+ thesis using Open Source Software (OSS
+\begin_inset CommandInset nomenclature
+LatexCommand nomenclature
+symbol "OSS"
+description "Open Source Software"
+literal "true"
+
+\end_inset
+
+).
+ Chapters of this template themselves concisely explain the necessary background
+ you need to know about \SpecialChar LaTeX
+, \SpecialChar LyX
+, floating figures and tables, equations, references
+ management, vector graphics, Inkscape, including program codes and others.
+\end_layout
+
+\begin_layout Standard
+I strongly urge you to prepare your thesis file from the very beginning
+ of your research.
+ This is invaluable since it enables you to immediately document and cite
+ every piece of new information you learn.
+ I strongly urge you to stick to immediate documentation and citation as
+ you learn.
+ Citation itself expresses the value of your writing.
+ You will find your citations invaluable especially after you read and learn
+ a lot.
+ At this time you will really fail to remember  from where you learned every
+ information.
+\end_layout
+
+\begin_layout Standard
+This template is hosted at 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/ahmed-rashed/ThesisTemplate
+\end_layout
+
+\end_inset
+
+.
+ Usage of this template is licensed under GNU
+\begin_inset space ~
+\end_inset
+
+GPLv3
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+www.gnu.org/licenses/quick-guide-gplv3.en.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ If you just want to use this template, simply download it as a zip file
+ using 
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/ahmed-rashed/ThesisTemplate/archive/master.zip
+\end_layout
+
+\end_inset
+
+ and proceed.
+ While you are using this template, if you faced problems, try hard to read,
+ learn and dig for solutions by yourself.
+ If you improved/corrected/debugged/extended this template, then please
+ 
+\begin_inset Flex Emph
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "clone"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ the template repository using 
+\begin_inset Flex Strong
+status open
+
+\begin_layout Plain Layout
+Git
+\end_layout
+
+\end_inset
+
+ by 
+\begin_inset listings
+lstparams "language=bash,tabsize=4"
+inline true
+status open
+
+\begin_layout Plain Layout
+
+$ git clone https://github.com/ahmed-rashed/ThesisTemplate.git
+\end_layout
+
+\end_inset
+
+, and kindly
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+In fact, you have to share your improvements according to the GNU
+\begin_inset space ~
+\end_inset
+
+GPLv3 license.
+\end_layout
+
+\end_inset
+
+ send me your modifications as a 
+\begin_inset Flex Emph
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "pullrequest"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Also if you have suggestions, corrections, bugs or improvement, please send
+ them a 
+\begin_inset Flex Emph
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "pullrequest"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+If you don't know what is 
+\begin_inset Flex Strong
+status open
+
+\begin_layout Plain Layout
+Git
+\end_layout
+
+\end_inset
+
+, you can find concise explanation in chapter 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:Version-Control-Using"
+
+\end_inset
+
+, or in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Git_Tower_Ebook"
+literal "true"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Finally, foreign languages usually causes some problems to \SpecialChar LaTeX
+ documents.
+ Arabic is not an exception.
+ So if you faced a strange problem that you cannot solve, try disabling
+ the Arabic parts of this thesis to check if the problem is related to the
+ Arabic language
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Mostly the problem is not specific to Arabic, but to several other languages
+ as well.
+\end_layout
+
+\end_inset
+
+.
+ To do so, just use the 
+\begin_inset Flex Strong
+status open
+
+\begin_layout Plain Layout
+Thesis_English.lyx
+\end_layout
+
+\end_inset
+
+ file.
+ If disabling Arabic solved your problem, please try hard to find a solution
+ and reactivate the Arabic again.
+ 
+\series bold
+Arabic scientists cannot help their nations using any language other than
+ Arabic.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+phantomsection
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{chapter}{Acknowledgments}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter*
+Acknowledgments
+\end_layout
+
+\begin_layout Standard
+Thanks to the Allah who helped me completing this template.
+ I ask him to accept it from me for the sake of his mercy.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Chapter*
+Table of Contents
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+newcontentsname}{Table of Contents}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addto
+\backslash
+captionsenglish{
+\backslash
+renewcommand{
+\backslash
+contentsname}{
+\backslash
+newcontentsname}}   %This is for Arabic Support.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+contentsname}{
+\backslash
+newcontentsname}   %This is for pure English.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+phantomsection
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{chapter}{
+\backslash
+newcontentsname}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Chapter*
+List of Tables
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+phantomsection
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+listtablename}{List of Tables}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{chapter}{
+\backslash
+listtablename}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList table
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Branch No Arabic
+inverted 0
+status open
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+For unknown reason, the following conflicts with the enumitem package (and
+ its 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlist{nosep}
+\end_layout
+
+\end_inset
+
+) in documents with Arabic text !!!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Chapter*
+List of Figures
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+newlofname}{List of Figures}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addto
+\backslash
+captionsenglish{
+\backslash
+renewcommand{
+\backslash
+listfigurename}{
+\backslash
+newlofname}}   %This is for Arabic Support.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+listfigurename}{
+\backslash
+newlofname}   %This is for pure English.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+phantomsection
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{chapter}{
+\backslash
+newlofname}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList figure
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Chapter*
+List of Codes
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+newlstlistingname}{Code}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+newcommand{
+\backslash
+newlstlistlistingname}{List of 
+\backslash
+newlstlistingname s}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addto
+\backslash
+captionsenglish{
+\backslash
+renewcommand{
+\backslash
+lstlistingname}{
+\backslash
+newlstlistingname}} %This works with both Arabic and pure English.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+lstlistlistingname}{
+\backslash
+newlstlistlistingname} %This is for pure English
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addto
+\backslash
+captionsenglish{
+\backslash
+renewcommand{
+\backslash
+lstlistlistingname}{
+\backslash
+newlstlistlistingname}} %For unknown reason, this does not work !!!
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addto
+\backslash
+captionsenglish{
+\backslash
+renewcommand{
+\backslash
+contentsname}{
+\backslash
+newlstlistlistingname}}  %For unknown reason, this work while the above
+ does not work !!!
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+phantomsection
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{chapter}{
+\backslash
+newlstlistlistingname}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand lstlistoflistings
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Chapter*
+Nomenclature
+\end_layout
+
+\begin_layout Plain Layout
+Nomenclature (and may be index too) does not show in arabic documents.
+\end_layout
+
+\begin_layout Plain Layout
+As a workaround (assuming your thesis file name is 
+\begin_inset Quotes eld
+\end_inset
+
+Thesis
+\begin_inset Quotes erd
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Enumerate
+pdflatex the Thesis.tex file twice (or as needed)
+\end_layout
+
+\begin_layout Enumerate
+manually edit the *.nlo file and modify as follows
+\end_layout
+
+\begin_deeper
+\begin_layout Plain Layout
+modify this
+\end_layout
+
+\begin_layout LyX-Code
+
+\backslash
+nomenclatureentry{aVI@[{VI}]
+\backslash
+begingroup Visual Inspection
+\backslash
+nomeqref {1.0}|nompageref}{
+\backslash
+if@rlmain 
+\backslash
+I {1}
+\backslash
+else 
+\backslash
+textLR {1}
+\backslash
+fi }
+\end_layout
+
+\begin_layout Plain Layout
+to this
+\end_layout
+
+\begin_layout LyX-Code
+
+\backslash
+nomenclatureentry{aVI@[{VI}]
+\backslash
+begingroup Visual Inspection
+\backslash
+nomeqref {1.0}|nompageref}{1}
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Run the command
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+makeindex 'Thesis.nlo' -s nomencl.ist -o 'Thesis.nls'
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+pdflatex the Thesis.tex file once more (or as needed)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+phantomsection
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{chapter}{Nomenclature}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset nomencl_print
+LatexCommand printnomenclature
+set_width "auto"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+afterpage{
+\backslash
+pagenumbering{arabic}}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Chapter
+MISSILE DESIGN FUNDAMENTALS
+\end_layout
+
+\begin_layout Section
+History
+\end_layout
+
+\begin_layout Standard
+The history of airplane and airship flights has been limited to movements
+ in the lower atmosphere.
+ These vehicles are completely dependant on this medium, since it provides
+ oxidizer for the propulsion systems and lift for flight.
+ However, the rocket's basic characteristic is that if operates independent
+ from the external atmosphere.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Chapter*
+Appendices
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{appendices}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand input
+filename "MatlabFunctions.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{appendices}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+phantomsection
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand{
+\backslash
+bibname}{References}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Chapter*
+References
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintAll"
+bibfiles "ReferenceDataBase"
+options "bibtotoc,IEEEtran"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Chapter*
+Index
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+phantomsection
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{chapter}{Index}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset index_print
+LatexCommand printindex
+type "idx"
+name "Index"
+literal "true"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
