@@ -1446,14 +1446,14 @@ Autopilot definition and main objective
 \end_layout
 
 \begin_layout Standard
-An autopilot is a software or tool that can only manage theaircraft under certain conditions using the vehicle's hydraulic,
+An autopilot is a software or tool that can only manage the aircraft under certain conditions using the vehicle's hydraulic,
  mechanical and electronic systems.
  This system,
  which can follow the flight plan,
  can stabilize speed and height as well as the location of the front of the aircraft (heading).
  Pilots mostly lead the aircraft in a controlled manner by autopilot except for departure and landing.
- Autopilot is mostly used on passenger aircrafts.(It's main objective is managing the aircraft under certain conditions using the vehicle's hydraulic,
- mechanical andelectronic systems).
+ Autopilot is mostly used on passenger aircraft.(It's main objective is managing the aircraft under certain conditions using the vehicle's hydraulic,
+ mechanical and electronic systems).
  
 \end_layout
 
@@ -1919,7 +1919,10 @@ GPS
 
 \begin_layout Plain Layout
 Position (Latitude,
- Longitude,
+\end_layout
+
+\begin_layout Plain Layout
+Longitude,
  Altitude),
  Velocity 
 \end_layout
@@ -2545,8 +2548,8 @@ softwares
  used on UAVs
 \begin_inset CommandInset nomenclature
 LatexCommand nomenclature
-symbol "UAV"
-description "Unmanned Aerial Vehicle"
+symbol "UAVs"
+description "Unmanned Aerial Vehicles"
 literal "true"
 
 \end_inset
@@ -2559,6 +2562,609 @@ A number of autopilot software packages are open-source,
  including PX4,
  Dronekit and ArduPilot which are both used widely in the drone industry.
  Flight controller hardware may be optimized for use with one or more particular autopilot software stacks.
+\end_layout
+
+\begin_layout Subsection
+Autopilot hardwares used on UAVs
+\end_layout
+
+\begin_layout Standard
+VECTOR-600 :
+\end_layout
+
+\begin_layout Standard
+The VECTOR-600 is UAV Navigation's most advanced autopilot.
+ VECTOR-600 is a robust and dependable unit,
+ with built-in physical and logical redundancy,
+ allowing it to survive all individual sensor failures while maintaining accurate estimates of attitude and position.
+ This dependability has helped the VECTOR-600 rapidly to become the autopilot of choice for UAV professionals who require the most advanced and reliable autopilot for fixed wing,
+ rotary wing and VTOL UAVs.
+\end_layout
+
+\begin_layout Standard
+Pixhawk Series:
+\end_layout
+
+\begin_layout Standard
+Silicon Errata
+\end_layout
+
+\begin_layout Standard
+Pixhawk Standard/Supported Autopilots:
+\end_layout
+
+\begin_layout Standard
+Holybro Pixhawk 4 (FMUv5)
+\end_layout
+
+\begin_layout Standard
+Holybro Pixhawk 4 Mini (FMUv5)
+\end_layout
+
+\begin_layout Standard
+Drotek Pixhawk 3 Pro (FMUv4pro)
+\end_layout
+
+\begin_layout Standard
+mRo Pixracer (FMUv4)
+\end_layout
+
+\begin_layout Standard
+Hex Cube Black (FMUv3)
+\end_layout
+
+\begin_layout Standard
+CUAV Pixhack v3 (FMUv3)
+\end_layout
+
+\begin_layout Standard
+mRo Pixhawk (FMUv2)
+\end_layout
+
+\begin_layout Section
+Flight Mechanics review
+\end_layout
+
+\begin_layout Subsection
+the general rigid body dynamics (RBD) equations in 3D space.
+\end_layout
+
+\begin_layout Standard
+The general rigid body dynamics (RBD) equations in 3D space describe the motion of a rigid body under the influence of external forces and moments.
+ These equations consist of translational motion (Newton’s Second Law) and rotational motion (Euler’s Equations of Motion).
+\end_layout
+
+\begin_layout Subsection
+Classification of The 12 equations of motion
+\end_layout
+
+\begin_layout Standard
+The 12 equations of motion for a rigid body in 3D space consist of kinematics and kinetics equations.
+ These are classified as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Category
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Variable
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Description
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Frame of Reference
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Position (Global Location)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+x,y,z
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Aircraft’s position
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Earth-fixed (Inertial)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Linear Velocities
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+u,v,w
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Forward,
+ sideward,
+ vertical velocity
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Body-fixed
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Orientation (Attitude)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ϕ,θ,ψ
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Roll,
+ pitch,
+ yaw angles
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Earth-fixed (Euler Angles)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Angular Velocities
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+p,q,r
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Roll,
+ pitch,
+ yaw rates
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\nospellcheck off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Body-fixed
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Derivation of the Equations of Motion (EOM) for Fixed-Wing Airplanes
+\end_layout
+
+\begin_layout Standard
+To derive the Equations of Motion (EOM) for Fixed-Wing Airplanes,
+ additional aerodynamic,
+ propulsion,
+ and gravitational forces must be incorporated into the Rigid Body Dynamics (RBD) equations.
+\end_layout
+
+\begin_layout Standard
+These aerodynamic forces and moments depend on parameters such as:
+\end_layout
+
+\begin_layout Standard
+• Angle of attack α
+\end_layout
+
+\begin_layout Standard
+• Sideslip angle β
+\end_layout
+
+\begin_layout Standard
+• Control surface deflections (elevator,
+ rudder,
+ ailerons)
+\end_layout
+
+\begin_layout Standard
+• Dynamic pressure 
 \end_layout
 
 \begin_layout Standard

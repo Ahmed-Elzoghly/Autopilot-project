@@ -1446,14 +1446,14 @@ Autopilot definition and main objective
 \end_layout
 
 \begin_layout Standard
-An autopilot is a software or tool that can only manage theaircraft under certain conditions using the vehicle's hydraulic,
+An autopilot is a software or tool that can only manage the aircraft under certain conditions using the vehicle's hydraulic,
  mechanical and electronic systems.
  This system,
  which can follow the flight plan,
  can stabilize speed and height as well as the location of the front of the aircraft (heading).
  Pilots mostly lead the aircraft in a controlled manner by autopilot except for departure and landing.
- Autopilot is mostly used on passenger aircrafts.(It's main objective is managing the aircraft under certain conditions using the vehicle's hydraulic,
- mechanical andelectronic systems).
+ Autopilot is mostly used on passenger aircraft.(It's main objective is managing the aircraft under certain conditions using the vehicle's hydraulic,
+ mechanical and electronic systems).
  
 \end_layout
 
@@ -1919,7 +1919,10 @@ GPS
 
 \begin_layout Plain Layout
 Position (Latitude,
- Longitude,
+\end_layout
+
+\begin_layout Plain Layout
+Longitude,
  Altitude),
  Velocity 
 \end_layout
@@ -3162,6 +3165,44 @@ These aerodynamic forces and moments depend on parameters such as:
 
 \begin_layout Standard
 • Dynamic pressure 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename Figures/pasted1.emf
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+salah
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

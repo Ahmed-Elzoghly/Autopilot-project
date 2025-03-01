@@ -13,8 +13,8 @@ t_vec = t0:dt:tf;   % Time vector
  
 
 %% ========================== Aircraft Mass and Inertia ==========================
-g = 9.81; % Gravity (m/s^2)
-m = 11;   % Mass of the aircraft (kg)
+gravity = 9.81; % Gravity (m/s^2)
+mass = 11;   % Mass of the aircraft (kg)
 
 % Inertia Matrix (kg.m^2)
 I_mat = [1 -2 -1; 
@@ -29,7 +29,7 @@ states_vec(:,1) = [10, 2, 0, 2*pi/180, pi/180, 0, 20*pi/180, 15*pi/180, 30*pi/18
 [u0,v0,w0,p0,q0,r0,phi0,theta0,psi0,x0,y_0,z0] = deal(10,2,0,2*pi/180,pi/180,0,20*pi/180,15*pi/180,30*pi/180,2,4,7);
 
 %% ========================== Runge-Kutta 4th Order (RK4) ==========================
-[t_vec_RK4, states_vec_RK4] = raunge_kutta_4(t_vec, states_vec(:,1), Forces, Moments, m, I_mat);
+[t_vec_RK4, states_vec_RK4] = raunge_kutta_4(t_vec, states_vec(:,1), Forces, Moments, mass, I_mat);
 
 %% ========================== Simulink RK4 ==========================
 simOut = sim("RBD_sim_model.slx");
