@@ -50,7 +50,7 @@ SD_long_final = SD_long;
 
 tempwartong = num2cell(SD_long_final);
 
-[Xu, Zu, Mu, Xw, Zw, Mw, Zwd, Zq, Mwd, Mq, Xde, Zde, Mde, Xdth, Zdth, Mdth] = deal(tempwartong{:});
+[Xu, Zu, Mu, Xw, Zw, Mw, Zwd, Zq, Mwd, Wq, Xde, Zde, WdG, Xdth, Zdth, Wdth] = deal(tempwartong{:});
 clear tempwartong;
 
 %% Stability derivatives for lateral motion
@@ -92,6 +92,7 @@ Matrix_controls = [0, Xde, Xdth, 0;
                    Nda, 0, 0, Ndr];
 
 %% Prepare some values for state space
+% Can be improved in the future (rakes)
 u0 = states_0(1);
 v0 = states_0(2);
 w0 = states_0(3);
@@ -112,7 +113,7 @@ alpha0 = theta0;
 beta0 = 0;
 wdot0 = 0;
 
-tempvariatdash = num2cell(SD_lat_dash);
+tempvariatdash = num2cell(SD_Lat_dash);
 [Yv, Yb, Lbd, Nbd, Lpd, Npd, Lrd, Wrd, Yda, Ydr, Ldad, Ndad, Ldrd, Ndrd] = deal(tempvariatdash{:});
 Lvd = Lbd / Vtotal_0;
 Hvd = Nbd / Vtotal_0;
