@@ -11,38 +11,37 @@ function states_dot = get_states_dot(t_vec, states_vec, Forces, Moments, m, I_ma
 % Outputs:
 %   - states_dot: Time derivative of states (12x1)
 
-% Extract states
-u     = states_vec(1);
-v     = states_vec(2);
-w     = states_vec(3);
-p     = states_vec(4);
-q     = states_vec(5);
-r     = states_vec(6);
-phi   = states_vec(7);
-theta = states_vec(8);
-psi   = states_vec(9);
-x     = states_vec(10);
-y     = states_vec(11);
-z     = states_vec(12);
+ % Extract states
+    u =     states_vec(1);
+    v =     states_vec(2);
+    w =     states_vec(3);
+    p =     states_vec(4);
+    q =     states_vec(5);
+    r =     states_vec(6);
+    phi =   states_vec(7);
+    theta = states_vec(8);
+    psi =   states_vec(9);
+    x =     states_vec(10);
+    y =     states_vec(11);
+    z =     states_vec(12);
 
-% Rotation matrix for Euler angles (ZYX convention)
-J = [ 1,  sin(phi)*tan(theta),  cos(phi)*tan(theta);
-      0,  cos(phi),            -sin(phi);
-      0,  sin(phi)/cos(theta),  cos(phi)/cos(theta)];
+    % Rotation matrix for Euler angles (ZYX convention)
+    J = [1, sin(phi) * tan(theta), cos(phi) * tan(theta);
+         0, cos(phi), -sin(phi);
+         0, sin(phi) / cos(theta), cos(phi) / cos(theta)];
 
-% Compute translational dynamics
-vel_dot = (1/m) * Forces - cross([p; q; r], [u; v; w]);
+    % Compute translational dynamics
+    vel_dot = (1 / m) * Forces - cross([p; q; r], [u; v; w]);
 
-% Compute rotational dynamics
-omega_dot = I_mat \ (Moments - cross([p; q; r], I_mat * [p; q; r]));
+    % Compute rotational dynamics
+    omega_dot = I_mat \ (Moments - cross([p; q; r], I_mat * [p; q; r]));
 
-% Compute Euler angle rates
-euler_dot = J * [p; q; r];
+    % Compute Euler angle rates
+    euler_dot = J * [p; q; r];
 
-% Compute position rates in the inertial frame
-pos_dot = eul2rotm([psi, theta, phi], 'ZYX') * [u; v; w];
+    % Compute position rates in the inertial frame
+    pos_dot = eul2rotm([psi, theta, phi], 'ZYX') * [u; v; w];
 
-% Concatenate state derivatives
-states_dot = [vel_dot; omega_dot; euler_dot; pos_dot];
-
+    % Concatenate state derivatives
+    states_dot = [vel_dot; omega_dot; euler_dot; pos_dot];
 end

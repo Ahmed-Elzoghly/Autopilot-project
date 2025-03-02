@@ -7,7 +7,6 @@ function [Forces,Moments] = get_forces_and_moments(delta_control,states_0,...
     Vb_dot_0 = [0; 0; 0];
     Vb_0 = states_0(1:3);
     Vomega_0 = states_0(4:6);
-    M_0 = [0; 0; 0];
 
     Vb = states(1:3);
     Vomega = states(4:6);
@@ -51,7 +50,7 @@ function [Forces,Moments] = get_forces_and_moments(delta_control,states_0,...
     delta_States_vec = [delta_States(1:6); w_dot - w_dot0];
 
     % Compute force and moment changes from state and control changes
-    delta_FM = Matrix_states * delta_States_vec + Matrix_controls* delta_control';
+    delta_FM = Matrix_states * delta_States_vec + Controls_Matrix * delta_control';
 
     % Mass moment of inertia vector
     I_vec = diag(I_mat);
@@ -61,11 +60,11 @@ function [Forces,Moments] = get_forces_and_moments(delta_control,states_0,...
     delta_Moments = I_vec .* delta_FM(4:6);
 
     % Compute gravitational forces in body frame
-    phi = states(7);  theta = states(8);  psi = states(9);
+    phi = States(7);  theta = States(8);  psi = States(9);
     Forces_Inertia = eul2rotm([psi, theta, phi], 'ZYX')' * [0; 0; m*g];
 
     % Total forces and moments
     Forces = delta_Forces + Forces_0 + Forces_Inertia;
-    Moments = delta_Moments + M_0;
+    Moments = delta_Moments + Moments_0;
 
 end

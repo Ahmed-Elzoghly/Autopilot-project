@@ -16,8 +16,8 @@ title('\beta (deg)')
 xlabel('time (sec)')
 
 subplot(4,3,3)
-plot(time_V,alpha_deg)
-title('\alpha (deg)')
+plot(time_V,w)
+title('w (ft/sec)')
 xlabel('time (sec)')
 
 subplot(4,3,4)
