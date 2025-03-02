@@ -1,10 +1,10 @@
 clc; clearvars; close all;
 
 %% Select Plane and Flight Condition
-addpath('Planes_Data');
+%addpath('Planes_Data');
 %addpath('Validation');
-%Plane_data_file = 'B747_FCS';
-Plane_data_file = 'Jetstar_FCS';
+Plane_data_file = 'B747_FCS';
+%Plane_data_file = 'Jetstar_FCS';
 
 % Read from the vector(aircraft_data) but take care of the order the values in excel sheet is arr
 aircraft_data = xlsread(Plane_data_file, 'B2:B61'); % Read the excel sheet from B2 to B61
@@ -17,14 +17,13 @@ n = tfinal/dt;
 
 
 %% Control action
-% delta_aileron = 0;
-% delta_rudder = 0;
-% delta_elevator = 0;
-% delta_thrust = 0;
-% 
-% delta_control = [deg2rad([delta_aileron, delta_rudder, delta_elevator]), delta_thrust];
+delta_aileron = (aircraft_data(57));
+delta_rudder = (aircraft_data(58));
+delta_elevator = (aircraft_data(59));
+delta_thrust = (aircraft_data(60));
 
-delta_control = [ transpose(aircraft_data(57:59)) * pi/180 , aircraft_data(60)];
+delta_control = [deg2rad([delta_aileron, delta_rudder, delta_elevator]), delta_thrust];
+%delta_control = [transpose(aircraft_data(57:59)), (aircraft_data(60))];
 
 %% Gravity, Mass & Inertia
 mass = aircraft_data(51);
@@ -178,8 +177,8 @@ P = [x; y; z];
 time_V = t_vec;
 
 %% Call validation_helper.m
-%run('validation_helper.m');
+run('validation_helper.m');
 %% simulink
-Simulator = sim('R21a.slx');
+%Simulator = sim('Airplane_simulator.slx');
 %% plot valadation
-plotValidation(t_vec, states_RK4, Simulator);
+%plotValidation(t_vec, states_RK4, Simulator);
