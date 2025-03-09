@@ -1,4 +1,4 @@
-function states_dot = get_states_dot(t_vec, states_vec, Forces, Moments, m, I_mat)
+function states_dot = get_states_dot(t_vec, states_vec, Forces, Moments, m, I_mat, I_inv)
 % get_states_dot Computes the time derivatives of the state variables
 % 
 % Inputs:
@@ -34,7 +34,7 @@ function states_dot = get_states_dot(t_vec, states_vec, Forces, Moments, m, I_ma
     vel_dot = (1 / m) * Forces - cross([p; q; r], [u; v; w]);
 
     % Compute rotational dynamics
-    omega_dot = I_mat \ (Moments - cross([p; q; r], I_mat * [p; q; r]));
+    omega_dot = I_inv * (Moments - cross([p; q; r], I_mat * [p; q; r]));
 
     % Compute Euler angle rates
     euler_dot = J * [p; q; r];

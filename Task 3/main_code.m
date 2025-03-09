@@ -2,9 +2,9 @@ clc; clearvars; close all;
 
 %% Select Plane and Flight Condition
 addpath('Planes_Data');
-%addpath('Validation');
-%Plane_data_file = 'B747_FCS';
-Plane_data_file = 'Jetstar_FCS';
+addpath('Validation');
+Plane_data_file = 'B747_FC5';
+%Plane_data_file = 'Jetstar_FC10';
 
 % Read from the vector(aircraft_data) but take care of the order the values in excel sheet is arr
 aircraft_data = xlsread(Plane_data_file, 'B2:B61'); % Read the excel sheet from B2 to B61
@@ -17,18 +17,19 @@ n = tfinal/dt;
 
 
 %% Control action
-% delta_aileron = 0;
-% delta_rudder = 0;
-% delta_elevator = 0;
-% delta_thrust = 0;
-% 
-% delta_control = [deg2rad([delta_aileron, delta_rudder, delta_elevator]), delta_thrust];
+delta_aileron = aircraft_data(57);
+delta_rudder = aircraft_data(58);
+delta_elevator = aircraft_data(59);
+delta_thrust = aircraft_data(60);
 
-delta_control = [ transpose(aircraft_data(57:59)) * pi/180 , aircraft_data(60)];
+delta_control = [deg2rad([delta_aileron, delta_rudder, delta_elevator]), delta_thrust];
+% delta_control = [delta_aileron, delta_rudder, delta_elevator, delta_thrust];
+%delta_control = [ transpose(aircraft_data(57:59)) * pi/180 , aircraft_data(60)];
 
 %% Gravity, Mass & Inertia
-mass = aircraft_data(51);
+weight = aircraft_data(51);
 gravity = aircraft_data(52);
+mass = weight/gravity;
 
 Ixx = aircraft_data(53);
 Iyy = aircraft_data(54);
@@ -39,6 +40,7 @@ Iyz = 0;
 Inertia = [Ixx, -Ixy, -Ixz;
            -Ixy, Iyy, -Iyz;
            -Ixz, -Iyz, Izz];
+I_inv = inv(Inertia);
 
 %% Initial conditions
 % states: [u; v; w; p; q; r; phi; theta; psi; x; y; z]
@@ -131,53 +133,72 @@ z0 = states_0(12);
 alpha0 = theta0;
 beta0 = 0;
 wdot0 = 0;
+% 
+% tempvariatdash = num2cell(SD_lat_dash);
+% [Yv, Yb, Lbd, Nbd, Lpd, Npd, Lrd, Nrd, Yda, Ydr, Ldad, Ndad, Ldrd, Ndrd] = deal(tempvariatdash{:});
+% Lvd = Lbd / Vtotal_0;
+% Nvd = Nbd/Vtotal_0;
+wdot = zeros(1,n+1);
 
-tempvariatdash = num2cell(SD_lat_dash);
-[Yv, Yb, Lbd, Nbd, Lpd, Npd, Lrd, Nrd, Yda, Ydr, Ldad, Ndad, Ldrd, Ndrd] = deal(tempvariatdash{:});
-Lvd = Lbd / Vtotal_0;
-Nvd = Nbd/Vtotal_0;
+initial_states_bus.u = u0;
+initial_states_bus.v = v0;
+initial_states_bus.w = w0;
+initial_states_bus.p = p0;
+initial_states_bus.q = q0;
+initial_states_bus.phi = phi0;
+initial_states_bus.theta = theta0;
+initial_states_bus.psi = psi0;
+initial_states_bus.x = x0;
+initial_states_bus.y = y0;
+initial_states_bus.z = z0;
+initial_states_bus.alpha = alpha0;
+initial_states_bus.beta = beta0 ;
+initial_states_bus.Vtotal = Vtotal_0;
+initial_states_bus.wdot = wdot0;
+
+
+
 
 %% ========================== Runge-Kutta 4th Order (RK4) ==========================
 for j = 2:n+1
-    [Forces(:,j),Moments(:,j)] = get_forces_and_moments(delta_control,states_0,...
-                                                                               SD_long_final,SD_lateral_final,F_gravity_0,mass,gravity,Inertia,...
-                                                                               states_RK4(:,j-1),Forces,Vtotal_0, tempvariatdash,Matrix_states,Matrix_controls);
-    states_RK4(:,j) = raunge_kutta_4(t_vec(j-1), Forces(:,j), Moments(:,j), states_RK4(:,j-1), mass, Inertia, dt);
+    [Forces(:,j),Moments(:,j)] = Airframe_Model(states_0,states_RK4(:,j-1),wdot(j-1),mass,Inertia,gravity,delta_control, Matrix_states, Matrix_controls);
+    [states_RK4(:,j), wdot(j)] = raunge_kutta_4(t_vec(j), Forces(:,j), Moments(:,j), states_RK4(:,j-1), mass, Inertia, I_inv, dt);
 
 end
 
-%% Extract variables for validation_helper.m
-% Extract position coordinates (x, y, z)
-x = states_RK4(10, :); % x position
-y = states_RK4(11, :); % y position
-z = states_RK4(12, :); % z position
-
-% Extract velocity components (u, v, w)
-u = states_RK4(1, :); % u velocity
-v = states_RK4(2, :); % v velocity
-w = states_RK4(3, :); % w velocity
-
-% Extract angular rates (p, q, r) and convert to degrees
-p_deg = rad2deg(states_RK4(4, :)); % p in deg/sec
-q_deg = rad2deg(states_RK4(5, :)); % q in deg/sec
-r_deg = rad2deg(states_RK4(6, :)); % r in deg/sec
-
-% Extract Euler angles (phi, theta, psi) and convert to degrees
-phi_deg = rad2deg(states_RK4(7, :)); % phi in deg
-theta_deg = rad2deg(states_RK4(8, :)); % theta in deg
-psi_deg = rad2deg(states_RK4(9, :)); % psi in deg
-
-% Compute alpha (angle of attack) and beta (sideslip angle)
-alpha_deg = rad2deg(atan2(w, u)); % alpha in deg
-beta_deg = rad2deg(atan2(v, sqrt(u.^2 + w.^2))); % beta in deg
-
-% Position matrix P
-P = [x; y; z];
-
-% Time vector for plotting
-time_V = t_vec;
+% %% Extract variables for validation_helper.m
+% % Extract position coordinates (x, y, z)
+% x = states_RK4(10, :); % x position
+% y = states_RK4(11, :); % y position
+% z = states_RK4(12, :); % z position
+% 
+% % Extract velocity components (u, v, w)
+% u = states_RK4(1, :); % u velocity
+% v = states_RK4(2, :); % v velocity
+% w = states_RK4(3, :); % w velocity
+% 
+% % Extract angular rates (p, q, r) and convert to degrees
+% p_deg = rad2deg(states_RK4(4, :)); % p in deg/sec
+% q_deg = rad2deg(states_RK4(5, :)); % q in deg/sec
+% r_deg = rad2deg(states_RK4(6, :)); % r in deg/sec
+% 
+% % Extract Euler angles (phi, theta, psi) and convert to degrees
+% phi_deg = rad2deg(states_RK4(7, :)); % phi in deg
+% theta_deg = rad2deg(states_RK4(8, :)); % theta in deg
+% psi_deg = rad2deg(states_RK4(9, :)); % psi in deg
+% 
+% % Compute alpha (angle of attack) and beta (sideslip angle)
+% alpha_deg = rad2deg(atan2(w, u)); % alpha in deg
+% beta_deg = rad2deg(atan2(v, sqrt(u.^2 + w.^2))); % beta in deg
+% 
+% % Position matrix P
+% P = [x; y; z];
+% 
+% % Time vector for plotting
+% time_V = t_vec;
 
 %% Call validation_helper.m
+valadation_help(states_RK4, t_vec)
 %run('validation_helper.m');
 %% simulink
 Simulator = sim('R21a.slx');
