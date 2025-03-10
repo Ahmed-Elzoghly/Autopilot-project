@@ -23,7 +23,7 @@ psi_deg = rad2deg(states_RK4(9, :)); % psi in deg
 
 % Compute alpha (angle of attack) and beta (sideslip angle)
 alpha_deg = rad2deg(atan2(w, u)); % alpha in deg
-beta_deg = rad2deg(atan2(v, sqrt(u.^2 + w.^2))); % beta in deg
+beta_deg = rad2deg(atan2(v, u)); % beta in deg
 
 % Position matrix P
 P = [x; y; z];
@@ -49,8 +49,8 @@ title('\beta (deg)')
 xlabel('time (sec)')
 
 subplot(4,3,3)
-plot(time_V,w)
-title('w (ft/sec)')
+plot(time_V,alpha_deg)
+title('\alpha (deg)')
 xlabel('time (sec)')
 
 subplot(4,3,4)

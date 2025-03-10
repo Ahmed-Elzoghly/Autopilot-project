@@ -16,12 +16,14 @@ function plotValidation(t_vec_RK4, states_vec_RK4, simOut)
                simOut.phi_simulink, simOut.theta_simulink, simOut.psi_simulink, ...
                simOut.x_simulink, simOut.y_simulink, simOut.z_simulink};
 
-    for j = 1:4  % Loop for 4 figures
-        figure;
-        sgtitle(['$\bf{' figure_titles{j} '}$'], 'Interpreter', 'latex', 'FontSize', 16);
         states_vec_RK4(7, :) = rad2deg(states_vec_RK4(7, :)); % phi
         states_vec_RK4(8, :) = rad2deg(states_vec_RK4(8, :)); % theta
         states_vec_RK4(9, :) = rad2deg(states_vec_RK4(9, :)); % psi
+
+    for j = 1:4  % Loop for 4 figures
+        figure;
+        sgtitle(['$\bf{' figure_titles{j} '}$'], 'Interpreter', 'latex', 'FontSize', 16);
+        
         
         for i = 1:3
             idx = (j-1)*3 + i;
