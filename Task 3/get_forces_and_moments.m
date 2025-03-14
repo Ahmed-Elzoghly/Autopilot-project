@@ -1,0 +1,71 @@
+%% Function to compute forces and moments
+function [Forces,Moments] = get_forces_and_moments(delta_control,states_0,...
+                                                SD_long_final,SD_lateral_final,Forces_0,m,g,I_mat,...
+                                                states,Forces,Vtotal_0, tempvariatdash,Matrix_states,Matrix_controls);
+
+    % Initialize
+    Vb_dot_0 = [0; 0; 0];
+    Vb_0 = states_0(1:3);
+    Vomega_0 = states_0(4:6);
+    M_0 = [0; 0; 0];
+
+    Vb = states(1:3);
+    Vomega = states(4:6);
+    Vb_dot = Forces ./ m - cross(Vomega, Vb);
+
+    delta_States = states - states_0;
+
+    % Extract linear & angular velocity changes
+    delta_u = delta_States(1);    delta_v = delta_States(2);    delta_w = delta_States(3);
+    delta_p = delta_States(4);    delta_q = delta_States(5);    delta_r = delta_States(6);
+
+    % Body axis velocities
+    u = Vb(1);    v = Vb(2);    w = Vb(3);
+    u0 = Vb_0(1); v0 = Vb_0(2); w0 = Vb_0(3);
+
+    % Initial total airspeed
+    Vt_0 = sqrt(u0^2 + v0^2 + w0^2);
+
+    % Body axis accelerations
+    u_dot = Vb_dot(1);    v_dot = Vb_dot(2);    w_dot = Vb_dot(3);
+    u_dot0 = Vb_dot_0(1); v_dot0 = Vb_dot_0(2); w_dot0 = Vb_dot_0(3);
+
+    % Body axis angular rates
+    p = Vomega(1);    q = Vomega(2);    r = Vomega(3);
+    p0 = Vomega_0(1); q0 = Vomega_0(2); r0 = Vomega_0(3);
+
+  
+
+    % Derived lateral derivatives (normalized)
+    tempvariatdash = num2cell(SD_lateral_final);
+    [Yv, Yb, Lbd, Nbd, Lpd, Npd, Lrd, Nrd, Yda, Ydr, Ldad, Ndad, Ldrd, Ndrd] = deal(tempvariatdash{:});
+    Lvd = Lbd / Vtotal_0;
+    Nvd = Nbd/Vtotal_0;
+
+    % Control surface deflections
+    Da = delta_control(1);  Dr = delta_control(2);
+    De = delta_control(3);  Dth = delta_control(4);
+
+
+    % Combined state change vector (including rotational acceleration)
+    delta_States_vec = [delta_States(1:6); w_dot - w_dot0];
+
+    % Compute force and moment changes from state and control changes
+    delta_FM = Matrix_states * delta_States_vec + Matrix_controls* delta_control';
+
+    % Mass moment of inertia vector
+    I_vec = diag(I_mat);
+
+    % Compute changes in forces and moments
+    delta_Forces = m * delta_FM(1:3);
+    delta_Moments = I_vec .* delta_FM(4:6);
+
+    % Compute gravitational forces in body frame
+    phi = states(7);  theta = states(8);  psi = states(9);
+    Forces_Inertia = eul2rotm([psi, theta, phi], 'ZYX')' * [0; 0; m*g];
+
+    % Total forces and moments
+    Forces = delta_Forces + Forces_0 + Forces_Inertia;
+    Moments = delta_Moments + M_0;
+
+end
