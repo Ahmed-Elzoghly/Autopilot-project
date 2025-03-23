@@ -1,0 +1,66 @@
+clc; clearvars; close all;
+
+run("Calculations.m")
+
+delta_aileron   = [0;5;-5;0;0;0;0;0;0];
+delta_rudder    = [0;0;0;5;-5;0;0;0;0];
+delta_elevator  = [0;0;0;0;0;5;-5;0;0];
+delta_thrust    = [0;0;0;0;0;0;0;1000;10000];
+delta_control   = [deg2rad([delta_aileron, delta_rudder, delta_elevator]), delta_thrust];
+
+% for i = 1:2
+%     % delta_control = Input(i,:);
+%         %% ========================== Runge-Kutta 4th Order (RK4) ==========================
+%     for j = 2:n+1
+%         [Forces(:,j),Moments(:,j)] = Airframe_Model(states_0,states_RK4(:,j-1),wdot(j-1),mass,Inertia,gravity,delta_control(i,:), Matrix_states, Matrix_controls);
+%         [states_RK4(:,j), wdot(j)] = raunge_kutta_4(t_vec(j), Forces(:,j), Moments(:,j), states_RK4(:,j-1), mass, Inertia, I_inv, dt);    
+%     end
+%     %% Call validation_helper.m
+%     % valadation_help(states_RK4, t_vec)    
+%     %% simulink  
+%     Simulator = sim('R21a.slx');
+%     %% plot valadation
+%     % plotValidation(t_vec, states_RK4, Simulator);
+%     plot_Validation(t_vec, states_RK4, Simulator);
+%     figHandles = findall(groot, 'Type', 'figure');
+%     for k = 1:length(figHandles)
+%         figure(figHandles(k)); % Bring figure to focus
+%         set(figHandles(k), 'Units', 'normalized', 'OuterPosition', [0 0 1 1]); % Fullscreen mode
+%         filename = sprintf('figure_%d.svg', k);
+%         saveas(figHandles(k), filename);
+%     end
+% end
+
+
+for i = 1:2
+    % Run RK4 Simulation
+    for j = 2:n+1
+        [Forces(:,j), Moments(:,j)] = Airframe_Model(states_0, states_RK4(:,j-1), wdot(j-1), mass, Inertia, gravity, delta_control(i,:), Matrix_states, Matrix_controls);
+        [states_RK4(:,j), wdot(j)] = raunge_kutta_4(t_vec(j), Forces(:,j), Moments(:,j), states_RK4(:,j-1), mass, Inertia, I_inv, dt);
+    end
+
+    % Run Simulink
+    Simulator = sim('R21a.slx');
+
+    % Plot validation
+    plot_Validation(t_vec, states_RK4, Simulator);
+
+    % Extract control input values for naming
+    aileron  = rad2deg(delta_control(i,1)); % Convert rad to degrees
+    rudder   = rad2deg(delta_control(i,2));
+    elevator = rad2deg(delta_control(i,3));
+    thrust   = delta_control(i,4);
+
+    % Ensure filenames are safe
+    filename_prefix = sprintf('Ail_%d_Rud_%d_Elev_%d_Thr_%d', aileron, rudder, elevator, thrust);
+    filename_prefix = strrep(filename_prefix, '.', 'p'); % Replace decimal points to prevent file issues
+
+    % Save figures with meaningful names
+    figHandles = findall(groot, 'Type', 'figure');
+    for k = 1:length(figHandles)
+        figure(figHandles(k)); % Bring figure to focus
+        set(figHandles(k), 'Units', 'normalized', 'OuterPosition', [0 0 1 1]); % Fullscreen mode
+        filename = sprintf('%s_Fig%d.svg', filename_prefix, k);
+        saveas(figHandles(k), filename);
+    end
+end
