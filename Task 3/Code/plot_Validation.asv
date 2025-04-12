@@ -1,51 +1,169 @@
-function plot_Validation(t_vec_RK4, states_vec_RK4, simOut, delta_control)
+function plot_Validation(t_vec_RK4, states_vec_RK4, simOut, delta_control, benchmark_all)
     % Extract control input values for naming
-    % aileron  = rad2deg(delta_control(1));
-    % rudder   = rad2deg(delta_control(2));
-    % elevator = rad2deg(delta_control(3));
-    % thrust   = delta_control(4);
+    aileron  = rad2deg(delta_control(1)); % Convert rad to degrees
+    rudder   = rad2deg(delta_control(2));
+    elevator = rad2deg(delta_control(3));
+    thrust   = delta_control(4);
+    
+    % Match control input to benchmark struct name
+    inputNames = {
+        'Benchmark_B747_FC5_no_input', ...
+        'Benchmark_B747_FC5_pos_5deg_daileron', ...
+        'Benchmark_B747_FC5_neg_5deg_daileron', ...
+        'Benchmark_B747_FC5_pos_5deg_drudder', ...
+        'Benchmark_B747_FC5_neg_5deg_drudder', ...
+        'Benchmark_B747_FC5_pos_5deg_delevator', ...
+        'Benchmark_B747_FC5_neg_5deg_delevator', ...
+        'Benchmark_B747_FC5_1000_dthrottle', ...
+        'Benchmark_B747_FC5_10000_dthrottle'
+    };
+    
+    inputIndex = find( ...
+        ismember(rad2deg(delta_control), [0, 5, -5, 0, 0, 5, -5], 1000, 10000, 'legacy'), ...
+        1, 'first');  % You can use a better mapping if needed
+    
+    if ~isempty(inputIndex)
+        inputName = inputNames{inputIndex};
+        if isfield(benchmark_all, inputName)
+            benchmark = benchmark_all.(inputName);
+        else
+            benchmark = [];
+        end
+    else
+        benchmark = [];
+    end
 
-    % % Ensure filenames are safe
-    % filename_prefix = sprintf('Ail_%d_Rud_%d_Elev_%d_Thr_%d', aileron, rudder, elevator, thrust);
-    % filename_prefix = strrep(filename_prefix, '.', 'p'); % Replace decimal points
 
-    % Load benchmark data
-    benchmark_data = load('Benchmark_B747_FC5.mat');
+    % Ensure filenames are safe
+    filename_prefix = sprintf('Ail_%d_Rud_%d_Elev_%d_Thr_%d', aileron, rudder, elevator, thrust);
+    filename_prefix = strrep(filename_prefix, '.', 'p'); % Replace decimal points to prevent file issues
 
-    % Assume benchmark contains similar state variables
-    benchmark_time = benchmark_data.time;  % Modify as per actual field name
-    benchmark_states = benchmark_data.states;  % Modify as per actual field name
+    % Function to compare simulation results from RK4 and Simulink
+    figure_titles = {'State Variables Comparison'};
 
     labels = {'$\bf{u}$ (m/s)', '$\bf{\beta}$ (deg)', '$\bf{\alpha}$ (deg)', ...
               '$\bf{p}$ (rad/s)', '$\bf{q}$ (rad/s)', '$\bf{r}$ (rad/s)', ...
               '$\bf{\phi}$ ($^\circ$)', '$\bf{\theta}$ ($^\circ$)', '$\bf{\psi}$ ($^\circ$)', ...
               '$\bf{x}$ (m)', '$\bf{y}$ (m)', '$\bf{z}$ (m)'};
 
+    simData = {
+    simOut.u_simulink, ...
+    simOut.v_simulink, ...
+    simOut.w_simulink, ...
+    simOut.p_simulink, ...
+    simOut.q_simulink, ...
+    simOut.r_simulink, ...
+    simOut.phi_simulink, ...
+    simOut.theta_simulink, ...
+    simOut.psi_simulink, ...
+    simOut.x_simulink, ...
+    simOut.y_simulink, ...
+    simOut.z_simulink
+};
+
+    
+
+% Convert p, q, r from rad/s to deg/s for Simulink outputs
+% simData{4}.data = rad2deg(simData{4}.data);  % p
+% simData{5}.data = rad2deg(simData{5}.data);  % q
+% simData{6}.data = rad2deg(simData{6}.data);  % r
+
+
     % Convert Euler angles to degrees for RK4 results
+
+    % states_vec_RK4(4, :) = rad2deg(states_vec_RK4(4, :)); % p
+    % states_vec_RK4(5, :) = rad2deg(states_vec_RK4(5, :)); % q
+    % states_vec_RK4(6, :) = rad2deg(states_vec_RK4(6, :)); % r
+
     states_vec_RK4(7, :) = rad2deg(states_vec_RK4(7, :)); % phi
     states_vec_RK4(8, :) = rad2deg(states_vec_RK4(8, :)); % theta
     states_vec_RK4(9, :) = rad2deg(states_vec_RK4(9, :)); % psi
 
-    % Plot all 12 states in one figure with benchmark data
+    % Compute alpha and beta for RK4 results
+    u_RK4 = states_vec_RK4(1, :);
+    v_RK4 = states_vec_RK4(2, :);
+    w_RK4 = states_vec_RK4(3, :);
+    alpha_RK4 = rad2deg(atan2(w_RK4, u_RK4)); % angle of attack in degrees
+    beta_RK4 = rad2deg(atan2(v_RK4, u_RK4)); % sideslip angle in degrees
+
+    % Compute alpha and beta for Simulink results
+    u_sim = simOut.u_simulink.data;
+    v_sim = simOut.v_simulink.data;
+    w_sim = simOut.w_simulink.data;
+    alpha_sim = rad2deg(atan2(w_sim, u_sim)); % angle of attack in degrees
+    beta_sim = rad2deg(atan2(v_sim, u_sim)); % sideslip angle in degrees
+
+    % Plot the trajectory
+    figure;
+    set(gcf, 'Units', 'normalized', 'OuterPosition', [0 0 1 1]); % Fullscreen mode
+    plot3(states_vec_RK4(10, :), states_vec_RK4(11, :), states_vec_RK4(12, :), 'c', 'LineWidth', 1.5);
+    hold on;
+    plot3(simOut.x_simulink.data, simOut.y_simulink.data, simOut.z_simulink.data, '--m', 'LineWidth', 1.5);
+    title('Trajectory Comparison', 'Interpreter', 'latex', 'FontSize', 16);
+    xlabel('$\bf{x}$ (m)', 'Interpreter', 'latex', 'FontSize', 14);
+    ylabel('$\bf{y}$ (m)', 'Interpreter', 'latex', 'FontSize', 14);
+    zlabel('$\bf{z}$ (m)', 'Interpreter', 'latex', 'FontSize', 14);
+    legend('RK4', 'Simulink', 'Interpreter', 'latex', 'FontSize', 12);
+    grid on;
+    saveas(gcf, sprintf('%s_Trajectory.svg', filename_prefix));
+
+    % Plot all 12 states in one figure
     figure;
     set(gcf, 'Units', 'normalized', 'OuterPosition', [0 0 1 1]); % Fullscreen mode
     sgtitle('$\bf{State Variables Comparison}$', 'Interpreter', 'latex', 'FontSize', 16);
 
     for i = 1:12
+                % Benchmark overlay
+        if ~isempty(benchmark)
+            try
+                switch i
+                    case 1,    plot(benchmark.time, benchmark.u, '-.g', 'LineWidth', 1.2);
+                    case 2,    plot(benchmark.time, benchmark.beta_deg, '-.g', 'LineWidth', 1.2);
+                    case 3,    plot(benchmark.time, benchmark.alpha_deg, '-.g', 'LineWidth', 1.2);
+                    case 4,    plot(benchmark.time, (benchmark.p), '-.g', 'LineWidth', 1.2);
+                    case 5,    plot(benchmark.time, rad2deg(benchmark.q), '-.g', 'LineWidth', 1.2);
+                    case 6,    plot(benchmark.time, rad2deg(benchmark.r), '-.g', 'LineWidth', 1.2);
+                    case 7,    plot(benchmark.time, benchmark.phi_deg, '-.g', 'LineWidth', 1.2);
+                    case 8,    plot(benchmark.time, benchmark.theta_deg, '-.g', 'LineWidth', 1.2);
+                    case 9,    plot(benchmark.time, benchmark.psi_deg, '-.g', 'LineWidth', 1.2);
+                    case 10,   plot(benchmark.time, benchmark.x, '-.g', 'LineWidth', 1.2);
+                    case 11,   plot(benchmark.time, benchmark.y, '-.g', 'LineWidth', 1.2);
+                    case 12,   plot(benchmark.time, benchmark.z, '-.g', 'LineWidth', 1.2);
+                end
+            catch
+                warning('Benchmark data for subplot %d not found.', i);
+            end
+        end
+
         subplot(4, 3, i); hold on;
         
-        plot(t_vec_RK4, states_vec_RK4(i, :), 'b', 'LineWidth', 1.5);
-        plot(simOut.tout, simOut.get(i).data, '--r', 'LineWidth', 1.5); % Simulink data
-        plot(benchmark_time, benchmark_states(i, :), '-.g', 'LineWidth', 1.5); % Benchmark data
-
+        if i == 1
+            plot(t_vec_RK4, states_vec_RK4(1, :), 'c', 'LineWidth', 1.5);
+            plot(simData{1}.time, simData{1}.data, '--m', 'LineWidth', 1.5);
+        elseif i == 2
+            plot(t_vec_RK4, beta_RK4, 'c', 'LineWidth', 1.5);
+            plot(simData{1}.time, beta_sim, '--m', 'LineWidth', 1.5);
+        elseif i == 3
+            plot(t_vec_RK4, alpha_RK4, 'c', 'LineWidth', 1.5);
+            plot(simData{1}.time, alpha_sim, '--m', 'LineWidth', 1.5);
+        else
+            plot(t_vec_RK4, states_vec_RK4(i, :), 'c', 'LineWidth', 1.5);
+            plot(simData{i}.time, simData{i}.data, '--m', 'LineWidth', 1.5);
+        end
+        
         title(labels{i}, 'Interpreter', 'latex', 'FontSize', 12);
         xlabel('$\bf{t}$ (sec)', 'Interpreter', 'latex', 'FontSize', 10);
         ylabel(labels{i}, 'Interpreter', 'latex', 'FontSize', 10);
         
-        legend('RK4', 'Simulink', 'Benchmark', 'Interpreter', 'latex', 'FontSize', 8);
+            legend_entries = {'RK4', 'Simulink'};
+    if ~isempty(benchmark)
+        legend_entries{end+1} = 'Benchmark';
+    end
+    legend(legend_entries, 'Interpreter', 'latex', 'FontSize', 8);
+
         grid on;
     end
 
-    % Save the comparison figure
-    % saveas(gcf, sprintf('%s_Comparison.svg', filename_prefix));
+    % Save the full figure
+    % saveas(gcf, sprintf('%s_States.svg', filename_prefix));
 end
