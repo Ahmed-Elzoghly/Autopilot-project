@@ -65,7 +65,7 @@ psi_dr = lat_TF(5,2);
 % _3DOF_S = 3DOF spiral mode Approximation 
 A_3DOF_S = [L_p_dash,L_r_dash,0 ;...  
           N_p_dash , N_r_dash , 0 ;... 
-          1,0,0];
+          1,tan(theta0),0];
 B_3DOF_S = [L_dr_dash;N_dr_dash;0];
 C_3DOF_S=eye(3);
 D_3DOF_S=zeros(3,1);
@@ -146,14 +146,11 @@ p_da_1DOF = TF_1DOF(1,1);
 %% Step response
 % change in the aileron deflection 
 aileron_inputs = deg2rad([1, 5, 10 ,25]); 
-T_final = 1200;
+tfinal = 200;
+T_final = 200;
 t = linspace(0, T_final, 1000);
 filename = 'figures\Lateral Results\response\delta_a';
 
-delta_aileron = 0;
-delta_rudder = 0;
-delta_elevator = 0;
-delta_thrust = 0;
 
 for j = 1:length(aileron_inputs) 
     aileron_input = aileron_inputs(j);
@@ -181,18 +178,18 @@ for j = 1:length(aileron_inputs)
     plot(t, rad2deg(y_full(:,1)), 'b', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_3DOF_D(:,1)), 'r', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_2DOF(:,1)), '--g', 'LineWidth', 1.5);
-    plot(simData{14}.time, simData{14}.data, '--c', 'LineWidth', 1.5);
+    plot(simData{14}.time, simData{14}.data, '--m', 'LineWidth', 1.5);
     ylabel('\beta (deg)'); grid on;
-    legend('Full Response', '3DOF Dutch Roll App','2DOF Dutch Roll App', 'Non Linear');
+    legend('Full model', '3DOF Dutch Roll App','2DOF Dutch Roll App', 'Non Linear');
     % r 
     subplot(2,1,2);
     hold on;
     plot(t, rad2deg(y_full(:,3)), 'b', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_3DOF_D(:,3)), 'r', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_2DOF(:,end)), '--g', 'LineWidth', 1.5);
-    plot(simData{6}.time, simData{6}.data, '--c', 'LineWidth', 1.5);
+    plot(simData{6}.time, simData{6}.data, '--m', 'LineWidth', 1.5);
     ylabel('r (deg/s)'); grid on;
-    legend('Full Response', '3DOF Dutch Roll App','2DOF Roll App', 'Non Linear');
+    legend('Full model', '3DOF Dutch Roll App','2DOF Roll App', 'Non Linear');
     sgtitle([' aileron deflection - \delta_a = ', num2str(rad2deg(aileron_input)), '°']);
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
     saveas(gcf,fullfile(filename,strcat('BetaAndR_due_d_a = ',num2str(rad2deg(aileron_input)),'.png')));
@@ -205,15 +202,16 @@ for j = 1:length(aileron_inputs)
     plot(t, rad2deg(y_full(:,2)), 'b', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_3DOF_D(:,2)), 'r', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_1DOF(:,1)), 'g', 'LineWidth', 1.5);
-    plot(simData{4}.time, simData{4}.data, '--c', 'LineWidth', 1.5);
+    plot(simData{4}.time, simData{4}.data, '--m', 'LineWidth', 1.5);
     ylabel('p (deg/s)'); grid on;
-    legend('Full Response', '3DOF Dutch Roll App','1DOF Roll App', 'Non Linear');
+    legend('Full model', '3DOF Dutch Roll App','1DOF Roll App', 'Non Linear');
     % ϕ 
     subplot(2,1,2);
+    hold on ;
     plot(t, rad2deg(y_full(:,4)), 'b', 'LineWidth', 1.5);
-    plot(simData{7}.time, simData{7}.data, '--c', 'LineWidth', 1.5);
+    plot(simData{7}.time, simData{7}.data, '--m', 'LineWidth', 1.5);
     ylabel('\phi (deg)'); xlabel('Time (seconds)'); grid on;
-    legend('Full Response', 'Non Linear');
+    legend('Full model', 'Non Linear');
     sgtitle(['aileron deflection - \delta_a = ', num2str(rad2deg(aileron_input)), '°']);
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
     saveas(gcf,fullfile(filename,strcat('PAndPhi_due_d_a = ',num2str(rad2deg(aileron_input)),'.png')));
@@ -221,14 +219,9 @@ end
 
 %% change in the rudder deflection 
 rudder_inputs = deg2rad([1, 5, 10, 25]); 
-T_final = 1200;
+T_final = 200;
 t = linspace(0, T_final, 1000);
 filename = 'figures\Lateral Results\response\delta_r';
-delta_aileron = 0;
-delta_rudder = 0;
-delta_elevator = 0;
-delta_thrust = 0;
-
 for j = 1:length(rudder_inputs) 
     rudder_input = rudder_inputs(j);
     SS_Lat_rudder_input = lat_ss(:,2);
@@ -253,9 +246,9 @@ for j = 1:length(rudder_inputs)
     plot(t, rad2deg(y_full(:,1)), 'b', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_3DOF_D(:,1)), 'r', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_2DOF(:,1)), '--g', 'LineWidth', 1.5);
-    plot(simData{14}.time, simData{14}.data, '--c', 'LineWidth', 1.5);
+    plot(simData{14}.time, simData{14}.data, '--m', 'LineWidth', 1.5);
     ylabel('\beta (deg)'); grid on;
-    legend('Full Response', '3DOF Dutch Roll App','2DOF Dutch Roll App', 'Non Linear');
+    legend('Full model', '3DOF Dutch Roll App','2DOF Dutch Roll App', 'Non Linear');
     % r 
     subplot(2,1,2);
     hold on;
@@ -263,9 +256,9 @@ for j = 1:length(rudder_inputs)
     plot(t, rad2deg(y_3DOF_S(:,2)), 'k', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_3DOF_D(:,3)), 'r', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_2DOF(:,2)), '--g', 'LineWidth', 1.5);
-    plot(simData{6}.time, simData{6}.data, '--c', 'LineWidth', 1.5);
+    plot(simData{6}.time, simData{6}.data, '--m', 'LineWidth', 1.5);
     ylabel('r (deg/s)'); grid on;
-    legend('Full Response', '3DOF Spiral App','3DOF Dutch Roll App','2DOF Roll App', 'Non Linear');
+    legend('Full model', '3DOF Spiral App','3DOF Dutch Roll App','2DOF Roll App', 'Non Linear');
     sgtitle([' Rudder deflection - \delta_r = ', num2str(rad2deg(rudder_input)), '°']);
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
     saveas(gcf,fullfile(filename,strcat('BetaAndR_due_d_r = ',num2str(rad2deg(rudder_input)),'.png')));
@@ -279,17 +272,17 @@ for j = 1:length(rudder_inputs)
     plot(t, rad2deg(y_3DOF_S(:,1)), 'k-.', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_3DOF_D(:,2)), '--r', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_1DOF(:,1)), 'g', 'LineWidth', 1.5);
-    plot(simData{5}.time, simData{5}.data, '--c', 'LineWidth', 1.5);
+    plot(simData{5}.time, simData{5}.data, '--m', 'LineWidth', 1.5);
     ylabel('p (deg/s)'); grid on;
-    legend('Full Response','3DOF Spiral App', '3DOF Dutch Roll App','1DOF Roll App', 'Non Linear');
+    legend('Full model','3DOF Spiral App', '3DOF Dutch Roll App','1DOF Roll App', 'Non Linear');
     % ϕ 
     subplot(2,1,2);
     hold on ;
     plot(t, rad2deg(y_full(:,4)), 'b', 'LineWidth', 1.5);
     plot(t, rad2deg(y_3DOF_S(:,1)), 'k', 'LineWidth', 1.5);
-    plot(simData{7}.time, simData{7}.data, '--c', 'LineWidth', 1.5);
+    plot(simData{7}.time, simData{7}.data, '--m', 'LineWidth', 1.5);
     ylabel('\phi (deg)'); xlabel('Time (seconds)'); grid on;
-    legend('Full Response','3DOF Spiral App', 'Non Linear');
+    legend('Full model','3DOF Spiral App', 'Non Linear');
     sgtitle(['Rudder deflection - \delta_r = ', num2str(rad2deg(rudder_input)), '°']);
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
     saveas(gcf,fullfile(filename,strcat('PAndPhi_due_d_r = ',num2str(rad2deg(rudder_input)),'.png')));
@@ -455,26 +448,27 @@ for i = 1:5
     bode(full_model_groups{i}, 'b'); hold on; % Full Model 
 
     if i <= length(dutch_3DOF_groups) && ~isempty(dutch_3DOF_groups{i})
-        bode(dutch_3DOF_groups{i}, 'r--'); % Dutch Roll 3DOF 
+        bode(dutch_3DOF_groups{i}, 'r--');hold on; % Dutch Roll 3DOF 
     end
     if i <= length(dutch_2DOF_groups) && ~isempty(dutch_2DOF_groups{i})
-        bode(dutch_2DOF_groups{i}, 'g-.'); % Dutch Roll 2DOF 
+        bode(dutch_2DOF_groups{i}, 'k-.');hold on; % Dutch Roll 2DOF 
     end
     if i == 2 && ~isempty(roll_1DOF_group{i})
-        bode(roll_1DOF_group{i}, 'm:'); % Roll Mode 
+        bode(roll_1DOF_group{i}, 'g:');% Roll Mode 
     end
     
     hold off;
     title(['(', variable_names{i}, ') Bode Plot Comparison (Aileron)'], 'Interpreter', 'none');
-    legend('Full Model', 'Dutch Roll 3DOF', 'Dutch Roll 2DOF', 'Roll Mode', 'Location', 'Best');
+    legend('Full Model', 'Dutch Roll 3DOF', 'Dutch Roll 2DOF', 'Roll Mode');
     set(findall(gcf,'type','line'),'linewidth',1.5);
     grid on;
     
     saveas(gcf, fullfile(Bode_a_filename, strcat(variable_names{i}, '/\delta_{a} ','.png')));
 end
 
-%%% bode plot (delta_rudder)
+%% bode plot (delta_rudder)
 Bode_r_filename = 'figures\Lateral Results\Bode Plots\Rudder';
+variable_names = {'\beta', 'p', 'r', '\phi', '\psi'};
 full_model_groups = {beta_dr, p_dr, r_dr, phi_dr, psi_dr}; 
 spiral_groups = {[], p_dr_3DOF_S, r_dr_3DOF_S, phi_dr_3DOF_S, []}; 
 dutch_3DOF_groups = {beta_dr_3DOF_D, p_dr_3DOF_D, r_dr_3DOF_D, [], []}; 
@@ -487,23 +481,29 @@ for i = 1:5
         mkdir(folderPath);
     end
 
-    bode(full_model_groups{i}, 'b'); hold on; % Full Model
+    labels = {}; % initialize labels
+
+    bode(full_model_groups{i}, 'b'); hold on;
+    labels{end+1} = 'Full Model';
 
     if i <= length(spiral_groups) && ~isempty(spiral_groups{i})
-        bode(spiral_groups{i}, 'c--'); % Spiral Mode 
+        bode(spiral_groups{i}, 'm--'); hold on;
+        labels{end+1} = 'Spiral Mode';
     end
     if i <= length(dutch_3DOF_groups) && ~isempty(dutch_3DOF_groups{i})
-        bode(dutch_3DOF_groups{i}, 'r-.'); % Dutch Roll 3DOF 
+        bode(dutch_3DOF_groups{i}, 'r-.'); hold on;
+        labels{end+1} = 'Dutch Roll 3DOF';
     end
     if i <= length(dutch_2DOF_groups) && ~isempty(dutch_2DOF_groups{i})
-        bode(dutch_2DOF_groups{i}, 'g:'); % Dutch Roll 2DOF 
+        bode(dutch_2DOF_groups{i}, 'k:'); hold on;
+        labels{end+1} = 'Dutch Roll 2DOF';
     end
-    
+
     hold off;
     title(['(', variable_names{i}, ') Bode Plot Comparison (Rudder)'], 'Interpreter', 'none');
-    legend('Full Model', 'Spiral Mode', 'Dutch Roll 3DOF', 'Dutch Roll 2DOF', 'Location', 'Best');
+    legend(labels);
     set(findall(gcf,'type','line'),'linewidth',1.5);
     grid on;
-    
+
     saveas(gcf, fullfile(Bode_r_filename, strcat(variable_names{i}, '/\delta_{r} ','.png')));
 end

@@ -70,8 +70,8 @@ q_dth_sp = Long_sp_TF(2,2);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % long period
-A_long_lp = [A_long(1,1),A_long(1,4);-Zu/(Zq+u0) ,0];
-B_long_lp = [B_long(1,1),B_long(1,2);-Zde/(Zq+u0),-Zdth/(Zq+u0)];
+A_long_lp = [Xu+w0*Zu/(Zq+u0),-g*cos(theta0)-w0*g*sin(theta0)/(Zq+u0);-Zu/(Zq+u0) ,g*sin(theta0)/(Zq+u0)];
+B_long_lp = [Xde+w0*Zde/(Zq+u0),Xdth+w0*Zdth/(Zq+u0);-Zde/(Zq+u0),-Zdth/(Zq+u0)];
 C_long_lp = eye(2);
 D_long_lp = zeros(2,2);
 eig_val_lp = eig(A_long_lp); %% eigen value For Approximation long period mode
@@ -93,15 +93,10 @@ theta_dth_lp = Long_lp_TF(2,2);
 
 
 elevator_inputs = deg2rad([1, 5, 25]); % different values for delta elevator 
-T_final = 1200;
+T_final = 800;
 t = linspace(0, T_final, 1000);
 filename = 'figures\Longitudinal Results\response\delta_e';
 
-
-    delta_aileron = 0;
-    delta_rudder = 0;
-    delta_elevator = 0;
-    delta_thrust = 0;
 
 for j = 1:length(elevator_inputs) 
     elevator_input = elevator_inputs(j);
@@ -124,8 +119,8 @@ for j = 1:length(elevator_inputs)
     figure('units','normalized','outerposition',[0 0 1 1])
     %%%%% w
     subplot(2,1,1);
-    plot(t, y_full(:,2), 'b', 'LineWidth', 1.5); hold on;
-    plot(t, y_short(:,1), 'r-', 'LineWidth', 1.5); hold on;
+    plot(t, y_full(:,2)+w0, 'b', 'LineWidth', 1.5); hold on; 
+    plot(t, y_short(:,1)+w0, 'r-', 'LineWidth', 1.5); hold on;
    
     plot(simData{3}.time, simData{3}.data, '--g', 'LineWidth', 1.5);
     title('Step Response For 5 deg. \delta_e')
@@ -133,8 +128,8 @@ for j = 1:length(elevator_inputs)
     legend('linear Full Response', 'Short Period Approximation', 'Non Linear');
     %%%%% q
     subplot(2,1,2);
-    plot(t, rad2deg(y_full(:,3)), 'b', 'LineWidth', 1.5); hold on;
-    plot(t,rad2deg(y_short(:,2)), 'r-', 'LineWidth', 1.5); hold on;
+    plot(t, rad2deg(y_full(:,3))+q0, 'b', 'LineWidth', 1.5); hold on;
+    plot(t,rad2deg(y_short(:,2))+q0, 'r-', 'LineWidth', 1.5); hold on;
     plot(simData{5}.time, simData{5}.data, '--g', 'LineWidth', 1.5);
     ylabel('q (deg/s)'); xlabel('Time (seconds)'); grid on;
     legend('linear Full Response', 'Short Period Approximation', 'Non Linear');
@@ -142,7 +137,7 @@ for j = 1:length(elevator_inputs)
     sgtitle(['Short Period Mode - \delta_e = ', num2str(rad2deg(elevator_input)), '°']);
 
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
-       %saveas(gcf,fullfile(filename,strcat('wAndq_due_d_e = ',num2str(rad2deg(elevator_input)),'.png')));
+       saveas(gcf,fullfile(filename,strcat('wAndq_due_d_e = ',num2str(rad2deg(elevator_input)),'.png')));
 
 
 
@@ -150,33 +145,29 @@ for j = 1:length(elevator_inputs)
     figure('units','normalized','outerposition',[0 0 1 1])
     %%%%% u
     subplot(2,1,1);
-    plot(t, y_full(:,1), 'b', 'LineWidth', 1.5); hold on; 
-    plot(t, y_long(:,1), 'r-', 'LineWidth', 1.5); hold on;
+    plot(t, y_full(:,1)+u0, 'b', 'LineWidth', 1.5); hold on; 
+    plot(t, y_long(:,1)+u0, 'r-', 'LineWidth', 1.5); hold on;
     plot(simData{1}.time, simData{1}.data, '--g', 'LineWidth', 1.5);
     ylabel('u (m/s)'); grid on;
     legend('linear Full Response', 'long Period Approximation', 'Non Linear');
     %%%%% theta
     subplot(2,1,2);
-    plot(t, rad2deg(y_full(:,4)), 'b', 'LineWidth', 1.5); hold on; 
-    plot(t, rad2deg(y_long(:,2)), 'r-', 'LineWidth', 1.5); hold on;
+    plot(t, rad2deg(y_full(:,4))+theta0, 'b', 'LineWidth', 1.5); hold on; 
+    plot(t, rad2deg(y_long(:,2))+theta0, 'r-', 'LineWidth', 1.5); hold on;
     plot(simData{8}.time, simData{8}.data, '--g', 'LineWidth', 1.5);
     ylabel('{\theta} (deg)'); xlabel('Time (seconds)'); grid on;
     legend('linear Full Response', 'long Period Approximation','Non Linear');
     sgtitle(['Long Period Mode - \delta_e = ', num2str(rad2deg(elevator_input)), '°']);
 
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
-    %saveas(gcf,fullfile(filename,strcat('uAndTheta_due_d_e = ',num2str(rad2deg(elevator_input)),'.png')));
+    saveas(gcf,fullfile(filename,strcat('uAndTheta_due_d_e = ',num2str(rad2deg(elevator_input)),'.png')));
 
 end
 %% Step response for thrust input
 thrust_inputs = [2000, 10000]; % different values for delta thrust (ibs)
-T_final = 1200;
+T_final = 800;
 t = linspace(0, T_final, 1000);
 filename = 'figures\Longitudinal Results\response\delta_th';
-    delta_aileron = 0;
-    delta_rudder = 0;
-    delta_elevator = 0;
-    delta_thrust = 0;
 for j = 1:length(thrust_inputs) 
     thrust_input = thrust_inputs(j);
     SS_Long_thrust_input = SS_Long(:,2); 
@@ -198,16 +189,16 @@ for j = 1:length(thrust_inputs)
     figure('units','normalized','outerposition',[0 0 1 1])
     %%%%% w
     subplot(2,1,1);
-    plot(t, y_full(:,2), 'b', 'LineWidth', 1.5); hold on; 
-    plot(t, y_short(:,1), 'r', 'LineWidth', 1.5);
+    plot(t, y_full(:,2)+w0, 'b', 'LineWidth', 1.5); hold on; 
+    plot(t, y_short(:,1)+w0, 'r', 'LineWidth', 1.5);
     hold on;   
     plot(simData{3}.time, simData{3}.data, '--g', 'LineWidth', 1.5);
     legend('linear Full Response', 'long Period Approximation','Non Linear');
     ylabel('w (m/s)'); grid on;
     %%%%% q
     subplot(2,1,2);
-    plot(t, rad2deg(y_full(:,3)), 'b', 'LineWidth', 1.5); hold on; 
-    plot(t, rad2deg(y_short(:,2)), 'r', 'LineWidth', 1.5);
+    plot(t, rad2deg(y_full(:,3))+q0, 'b', 'LineWidth', 1.5); hold on; 
+    plot(t, rad2deg(y_short(:,2))+q0, 'r', 'LineWidth', 1.5);
     plot(simData{5}.time, simData{5}.data, '--g', 'LineWidth', 1.5);
     ylabel('q (deg/s)'); xlabel('Time (seconds)'); grid on;
     legend('linear Full Response', 'Short Period Approximation', 'Non Linear');
@@ -215,21 +206,21 @@ for j = 1:length(thrust_inputs)
 
 
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
-    %saveas(gcf,fullfile(filename,strcat('wAndq_due_d_th = ',num2str(thrust_input),'.png')));
+    saveas(gcf,fullfile(filename,strcat('wAndq_due_d_th = ',num2str(thrust_input),'.png')));
 
     %Figure 2: Long Period (u, \theta)
     %%%%% u
     figure('units','normalized','outerposition',[0 0 1 1])
     subplot(2,1,1);
-    plot(t, y_full(:,1), 'b', 'LineWidth', 1.5); hold on; 
-    plot(t, y_long(:,1), 'r', 'LineWidth', 1.5);
+    plot(t, y_full(:,1)+u0, 'b', 'LineWidth', 1.5); hold on; 
+    plot(t, y_long(:,1)+u0, 'r', 'LineWidth', 1.5);
     plot(simData{1}.time, simData{1}.data, '--g', 'LineWidth', 1.5);
     ylabel('u (m/s)'); grid on;
     legend('linear Full Response', 'long Period Approximation', 'Non Linear');
     %%%%% theta
     subplot(2,1,2);
-    plot(t, rad2deg(y_full(:,4)), 'b', 'LineWidth', 1.5); hold on; 
-    plot(t, rad2deg(y_long(:,2)), 'r', 'LineWidth', 1.5);
+    plot(t, rad2deg(y_full(:,4))+theta0, 'b', 'LineWidth', 1.5); hold on; 
+    plot(t, rad2deg(y_long(:,2))+theta0, 'r', 'LineWidth', 1.5);
     plot(simData{8}.time, simData{8}.data, '--g', 'LineWidth', 1.5);
     ylabel('{\theta} (deg)'); xlabel('Time (seconds)'); grid on;
     legend('linear Full Response', 'long Period Approximation','Non Linear');
@@ -237,7 +228,7 @@ for j = 1:length(thrust_inputs)
     sgtitle(['Long Period Mode - \delta_T = ', num2str(thrust_input), ' lbs']);
 
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
-    %saveas(gcf,fullfile(filename,strcat('uAndTheta_due_d_th = ',num2str(thrust_input),'.png')));
+    saveas(gcf,fullfile(filename,strcat('uAndTheta_due_d_th = ',num2str(thrust_input),'.png')));
 
 end
 
@@ -266,7 +257,7 @@ for i = 1:4
     title(['(', short_period_titles{i}, ') Short Period Mode'], 'Interpreter', 'none');
     set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
 
-    %saveas(gcf,fullfile(RL_SP_filename,strcat(short_period_titles{i}, 'Full Model&Approx','.png')));
+    saveas(gcf,fullfile(RL_SP_filename,strcat(short_period_titles{i}, 'Full Model&Approx','.png')));
 
 end
 
@@ -292,7 +283,7 @@ for i = 1:4
     title(['(', long_period_titles{i}, ') Long Period Mode'], 'Interpreter', 'none');
     set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
 
-    %saveas(gcf,fullfile(RL_LP_filename,strcat(long_period_titles{i}, 'Full Model&Approx','.png')));
+    saveas(gcf,fullfile(RL_LP_filename,strcat(long_period_titles{i}, 'Full Model&Approx','.png')));
 
 end
 
@@ -321,7 +312,7 @@ for i = 1:4
     set(findall(gcf,'type','line'),'linewidth',1.5);
     grid on;
 
-    %saveas(gcf, fullfile(Bode_SP_filename, strcat(short_period_titles{i}, '_Comparison.png')));
+    saveas(gcf, fullfile(Bode_SP_filename, strcat(short_period_titles{i}, '_Comparison.png')));
 end
 
 %%% Bode plot for Long Period Mode
@@ -346,5 +337,5 @@ for i = 1:4
     set(findall(gcf,'type','line'),'linewidth',1.5);
     grid on;
 
-    %saveas(gcf, fullfile(Bode_LP_filename, strcat(long_period_titles{i}, '_Comparison.png')));
+    saveas(gcf, fullfile(Bode_LP_filename, strcat(long_period_titles{i}, '_Comparison.png')));
 end
