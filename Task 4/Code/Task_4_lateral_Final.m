@@ -66,9 +66,11 @@ psi_dr = lat_TF(5,2);
 A_3DOF_S = [L_p_dash,L_r_dash,0 ;...  
           N_p_dash , N_r_dash , 0 ;... 
           1,tan(theta0),0];
-B_3DOF_S = [L_dr_dash;N_dr_dash;0];
+B_3DOF_S = [L_da_dash , L_dr_dash;...
+             N_da_dash , N_dr_dash;...
+             0 , 0];
 C_3DOF_S=eye(3);
-D_3DOF_S=zeros(3,1);
+D_3DOF_S=zeros(size(B_3DOF_S));
 ss_3DOF_S = ss(A_3DOF_S,B_3DOF_S,C_3DOF_S,D_3DOF_S); 
 Eigenvalues_3DOF_S= eig(A_3DOF_S);
 disp('Eigenvalues_3DOF_S:') 
@@ -90,7 +92,7 @@ B_3DOF_D = [Y_star_da , Y_star_dr;...
          L_da_dash , L_dr_dash;... 
          N_da_dash , N_dr_dash]; 
 C_3DOF_D = eye(3);
-D_3DOF_D=zeros(3,2);
+D_3DOF_D=zeros(size(B_3DOF_D));
 ss_3DOF_D = ss(A_3DOF_D,B_3DOF_D,C_3DOF_D,D_3DOF_D); 
 Eigenvalues_3DOF_D= eig(A_3DOF_D);
 disp('Eigenvalues_3DOF_D:') 
@@ -109,12 +111,12 @@ r_dr_3DOF_D = TF_3DOF_D(3,2);
 % States [beta ; r]   
 % Inbuts [da ; dr]
 % _2DOF = 2DOF Dutch Roll mode Approximation
-A_2DOF = [Yv,-(1-Yr/u0);...
-          N_beta_dash , N_r_dash];
+A_2DOF = [Yv,(Yr-u0)/Vtotal_0-tan(theta0)*(Yp+w0)/Vtotal_0;...
+          N_beta_dash , N_r_dash-tan(theta0)*N_p_dash];
 B_2DOF = [Y_star_da , Y_star_dr;...
           N_da_dash , N_dr_dash];
 C_2DOF = eye(2);
-D_2DOF = zeros(2,2);
+D_2DOF = zeros(size(B_2DOF));
 ss_2DOF = ss(A_2DOF,B_2DOF,C_2DOF,D_2DOF);
 Eigenvalues_2DOF= eig(A_2DOF);
 disp('Eigenvalues_2DOF:') 
@@ -133,8 +135,8 @@ r_dr_2DOF = TF_2DOF(2,2);
 % _1DOF = 1DOF Roll mode Approximatio
 A_1DOF = L_p_dash;
 B_1DOF = L_da_dash ;
-C_1DOF = 1;
-D_1DOF = 0;
+C_1DOF = eye(1); 
+D_1DOF = zeros(size(B_1DOF));
 ss_1DOF = ss(A_1DOF,B_1DOF,C_1DOF,D_1DOF);
 Eigenvalues_1DOF= eig(A_1DOF);
 disp('Eigenvalues_1DOF:') 
@@ -166,6 +168,7 @@ for j = 1:length(aileron_inputs)
                    simOut.alpha_simulink, simOut.beta_simulink};
 
     [y_full, t] = step(SS_Lat_aileron_input * aileron_input, t);
+    [y_3DOF_S, t] = step(ss_3DOF_S(:,1) * aileron_input, t);
     [y_3DOF_D, t] = step(ss_3DOF_D(:,1) * aileron_input, t);
     [y_2DOF, t] = step(ss_2DOF(:,1) * aileron_input, t);
     [y_1DOF, t] = step(ss_1DOF(:,1) * aileron_input, t);
@@ -175,21 +178,22 @@ for j = 1:length(aileron_inputs)
     % beta
     subplot(2,1,1);
     hold on ;
-    plot(t, rad2deg(y_full(:,1)), 'b', 'LineWidth', 1.5); 
+    plot(t, rad2deg(y_full(:,1)), 'b', 'LineWidth', 1.5);
     plot(t, rad2deg(y_3DOF_D(:,1)), 'r', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_2DOF(:,1)), '--g', 'LineWidth', 1.5);
     plot(simData{14}.time, simData{14}.data, '--m', 'LineWidth', 1.5);
     ylabel('\beta (deg)'); grid on;
-    legend('Full model', '3DOF Dutch Roll App','2DOF Dutch Roll App', 'Non Linear');
+    legend('Full model','3DOF Dutch Roll App','2DOF Dutch Roll App', 'Non Linear');
     % r 
     subplot(2,1,2);
     hold on;
     plot(t, rad2deg(y_full(:,3)), 'b', 'LineWidth', 1.5); 
+    plot(t, rad2deg(y_3DOF_S(:,2)), 'k', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_3DOF_D(:,3)), 'r', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_2DOF(:,end)), '--g', 'LineWidth', 1.5);
     plot(simData{6}.time, simData{6}.data, '--m', 'LineWidth', 1.5);
     ylabel('r (deg/s)'); grid on;
-    legend('Full model', '3DOF Dutch Roll App','2DOF Roll App', 'Non Linear');
+    legend('Full model','3DOF Spiral App', '3DOF Dutch Roll App','2DOF Roll App', 'Non Linear');
     sgtitle([' aileron deflection - \delta_a = ', num2str(rad2deg(aileron_input)), '°']);
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
     saveas(gcf,fullfile(filename,strcat('BetaAndR_due_d_a = ',num2str(rad2deg(aileron_input)),'.png')));
@@ -200,18 +204,20 @@ for j = 1:length(aileron_inputs)
     subplot(2,1,1);
     hold on;
     plot(t, rad2deg(y_full(:,2)), 'b', 'LineWidth', 1.5); 
+    plot(t, rad2deg(y_3DOF_S(:,1)), 'k', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_3DOF_D(:,2)), 'r', 'LineWidth', 1.5); 
     plot(t, rad2deg(y_1DOF(:,1)), 'g', 'LineWidth', 1.5);
     plot(simData{4}.time, simData{4}.data, '--m', 'LineWidth', 1.5);
     ylabel('p (deg/s)'); grid on;
-    legend('Full model', '3DOF Dutch Roll App','1DOF Roll App', 'Non Linear');
+    legend('Full model','3DOF Spiral App', '3DOF Dutch Roll App','1DOF Roll App', 'Non Linear');
     % ϕ 
     subplot(2,1,2);
     hold on ;
     plot(t, rad2deg(y_full(:,4)), 'b', 'LineWidth', 1.5);
+    plot(t, rad2deg(y_3DOF_S(:,3)), 'k', 'LineWidth', 1.5); 
     plot(simData{7}.time, simData{7}.data, '--m', 'LineWidth', 1.5);
     ylabel('\phi (deg)'); xlabel('Time (seconds)'); grid on;
-    legend('Full model', 'Non Linear');
+    legend('Full model', '3DOF Spiral App','Non Linear');
     sgtitle(['aileron deflection - \delta_a = ', num2str(rad2deg(aileron_input)), '°']);
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
     saveas(gcf,fullfile(filename,strcat('PAndPhi_due_d_a = ',num2str(rad2deg(aileron_input)),'.png')));

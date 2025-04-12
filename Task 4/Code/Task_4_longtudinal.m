@@ -39,15 +39,15 @@ Eigenvalues_lp=[Eigenvalues(3);Eigenvalues(4)];
 %disp('Eigenvalues_lp:') 
 %disp(Eigenvalues_lp)
 % TF  with elevator 
-u_de = Long_TF(1,1);
-w_de = Long_TF(2,1);
-q_de = Long_TF(3,1);
-theta_de = Long_TF(4,1);
+u_de = Long_TF(1,1)+u0;
+w_de = Long_TF(2,1)+w0;
+q_de = Long_TF(3,1)+q0;
+theta_de = Long_TF(4,1)+theta0;
 % TF  with Thrust
-u_dth=Long_TF(1,2);
-w_dth = Long_TF(2,2);
-q_dth = Long_TF(3,2);
-theta_dth = Long_TF(4,2);
+u_dth=Long_TF(1,2)+u0;
+w_dth = Long_TF(2,2)+w0;
+q_dth = Long_TF(3,2)+q0;
+theta_dth = Long_TF(4,2)+theta0;
 
 %% Modes Approximation
 % Short period
@@ -62,16 +62,18 @@ eig_val_sp=eig(A_long_sp); %% eigen value For Approximation short period mode
 Long_sp_ss = ss(A_long_sp,B_long_sp,C_long_sp,D_long_sp); 
 Long_sp_TF = tf(Long_sp_ss);
 % elevator TF 
-w_de_sp = Long_sp_TF(1,1);
-q_de_sp = Long_sp_TF(2,1);
+w_de_sp = Long_sp_TF(1,1)+w0;
+q_de_sp = Long_sp_TF(2,1)+q0;
 % Thrustor
-w_dth_sp = Long_sp_TF(1,2);
-q_dth_sp = Long_sp_TF(2,2);
+w_dth_sp = Long_sp_TF(1,2)+w0;
+q_dth_sp = Long_sp_TF(2,2)+q0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % long period
-A_long_lp = [Xu+w0*Zu/(Zq+u0),-g*cos(theta0)-w0*g*sin(theta0)/(Zq+u0);-Zu/(Zq+u0) ,g*sin(theta0)/(Zq+u0)];
-B_long_lp = [Xde+w0*Zde/(Zq+u0),Xdth+w0*Zdth/(Zq+u0);-Zde/(Zq+u0),-Zdth/(Zq+u0)];
+A_long_lp = [Xu,-g*cos(theta0);
+             -Zu/(Zq+u0) ,g*sin(theta0)/(Zq+u0)];
+B_long_lp = [Xde,Xdth ;
+              -Zde/(Zq+u0),-Zdth/(Zq+u0)];
 C_long_lp = eye(2);
 D_long_lp = zeros(2,2);
 eig_val_lp = eig(A_long_lp); %% eigen value For Approximation long period mode
@@ -81,11 +83,11 @@ eig_val_lp = eig(A_long_lp); %% eigen value For Approximation long period mode
 Long_lp_ss = ss(A_long_lp,B_long_lp,C_long_lp,D_long_lp); 
 Long_lp_TF = tf(Long_lp_ss);
 % elevator TF 
-u_de_lp = Long_lp_TF(1,1);
-theta_de_lp = Long_lp_TF(2,1);
+u_de_lp = Long_lp_TF(1,1)+u0;
+theta_de_lp = Long_lp_TF(2,1)+theta0;
 % Thrustor
-u_dth_lp = Long_lp_TF(1,2);
-theta_dth_lp = Long_lp_TF(2,2);
+u_dth_lp = Long_lp_TF(1,2)+u0;
+theta_dth_lp = Long_lp_TF(2,2)+theta0;
 %%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -130,10 +132,10 @@ for j = 1:length(elevator_inputs)
     legend('linear Full Response', 'Short Period Approximation', 'Non Linear');
     %%%%% q
     subplot(2,1,2);
-    plot(t, rad2deg(y_full(:,3))+rad2deg(q0), 'b', 'LineWidth', 1.5); hold on;
-    plot(t,rad2deg(y_short(:,2))+rad2deg(q0), 'g-', 'LineWidth', 1.5); hold on;
-    plot(simData{5}.time, simData{5}.data, '--r', 'LineWidth', 1.5);
-    ylabel('q (deg/s)'); xlabel('Time (seconds)'); grid on;
+    plot(t, (y_full(:,3))+(q0), 'b', 'LineWidth', 1.5); hold on;
+    plot(t,(y_short(:,2))+(q0), 'g-', 'LineWidth', 1.5); hold on;
+    plot(simData{5}.time,simData{5}.data, '--r', 'LineWidth', 1.5);
+    ylabel('q (rad/s)'); xlabel('Time (seconds)'); grid on;
     legend('linear Full Response', 'Short Period Approximation', 'Non Linear');
 
     sgtitle(['Short Period Mode - \delta_e = ', num2str(rad2deg(elevator_input)), '°']);
@@ -156,7 +158,7 @@ for j = 1:length(elevator_inputs)
     subplot(2,1,2);
     plot(t, rad2deg(y_full(:,4))+rad2deg(theta0), 'b', 'LineWidth', 1.5); hold on; 
     plot(t, rad2deg(y_long(:,2))+rad2deg(theta0), 'g-', 'LineWidth', 1.5); hold on;
-    plot(simData{8}.time, simData{8}.data, '--r', 'LineWidth', 1.5);
+    plot(simData{8}.time,simData{8}.data, '--r', 'LineWidth', 1.5);
     ylabel('{\theta} (deg)'); xlabel('Time (seconds)'); grid on;
     legend('linear Full Response', 'long Period Approximation','Non Linear');
     sgtitle(['Long Period Mode - \delta_e = ', num2str(rad2deg(elevator_input)), '°']);
@@ -202,10 +204,10 @@ for j = 1:length(thrust_inputs)
     ylabel('w (m/s)'); grid on;
     %%%%% q
     subplot(2,1,2);
-    plot(t, rad2deg(y_full(:,3))+rad2deg(q0), 'b', 'LineWidth', 1.5); hold on; 
-    plot(t, rad2deg(y_short(:,2))+rad2deg(q0), 'g', 'LineWidth', 1.5);
-    plot(simData{5}.time, simData{5}.data, '--r', 'LineWidth', 1.5);
-    ylabel('q (deg/s)'); xlabel('Time (seconds)'); grid on;
+    plot(t, (y_full(:,3))+(q0), 'b', 'LineWidth', 1.5); hold on; 
+    plot(t, (y_short(:,2))+(q0), 'g', 'LineWidth', 1.5);
+    plot(simData{5}.time,simData{5}.data, '--r', 'LineWidth', 1.5);
+    ylabel('q (rad/s)'); xlabel('Time (seconds)'); grid on;
     legend('linear Full Response', 'Short Period Approximation', 'Non Linear');
     sgtitle(['Short Period Mode - \delta_T = ', num2str(thrust_input), ' lbs']);
 
@@ -323,7 +325,7 @@ end
 %%% Bode plot for Long Period Mode
 Bode_LP_filename = 'figures\Longitudinal Results\Bode plot\Long period';
 linear_full_model_long = {u_de, theta_de, u_dth, theta_dth};
-long_period_approx = {u_de_lp, theta_de_lp, u_de_lp, theta_dth_lp}; 
+long_period_approx = {u_de_lp, theta_de_lp, u_dth_lp, theta_dth_lp}; 
 long_period_titles = {'u_de', 'theta_de', 'u_dth', 'theta_dth'};
 
 for i = 1:4
