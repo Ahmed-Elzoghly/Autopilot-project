@@ -1,8 +1,8 @@
 clc; clearvars; close all;
 
 %% Select Plane and Flight Condition
-%addpath('Planes_Data');
-%addpath('Validation');
+addpath('Planes_Data');
+addpath('Validation');
 Plane_data_file = 'B747_FC5';
 %Plane_data_file = 'Jetstar_FC10';
 % Read from the vector(aircraft_data) but take care of the order the values in excel sheet is arr

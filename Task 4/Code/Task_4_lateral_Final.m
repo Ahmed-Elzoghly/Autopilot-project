@@ -224,6 +224,11 @@ rudder_inputs = deg2rad([1, 5, 10, 25]);
 T_final = 1200;
 t = linspace(0, T_final, 1000);
 filename = 'figures\Lateral Results\response\delta_r';
+delta_aileron = 0;
+delta_rudder = 0;
+delta_elevator = 0;
+delta_thrust = 0;
+
 for j = 1:length(rudder_inputs) 
     rudder_input = rudder_inputs(j);
     SS_Lat_rudder_input = lat_ss(:,2);
