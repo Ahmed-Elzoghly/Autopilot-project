@@ -28,7 +28,7 @@ L_dr_dash  = SD_Lat_dash(13);
 N_dr_dash   = SD_Lat_dash(14);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % States = [beta ; p ; r ; phi ; psi]
-A_lat = [Yv , (w0+Yp)/Vtotal_0 , (-u0+Yr)/Vtotal_0 , g*cos(theta0)/Vtotal_0 , 0;... 
+A_lat = [Yb/Vtotal_0 , (w0+Yp)/Vtotal_0 , (-u0+Yr)/Vtotal_0 , g*cos(theta0)/Vtotal_0 , 0;... 
         L_beta_dash , L_p_dash , L_r_dash , 0 , 0;... 
         N_beta_dash , N_p_dash , N_r_dash , 0 , 0;... 
         0 , 1 , tan(theta0) , 0 , 0;... 
@@ -47,17 +47,17 @@ disp(Eigenvalues)
 [e_vecs_lat,e_vals_lat]= eig(A_lat);
 lat_TF = tf(lat_ss);
 % TF  with aliron
-beta_da = lat_TF(1,1);
-p_da = lat_TF(2,1);
-r_da = lat_TF(3,1);
-phi_da = lat_TF(4,1);
-psi_da = lat_TF(5,1);
+beta_da = lat_TF(1,1)+beta0;
+p_da = lat_TF(2,1)+p0;
+r_da = lat_TF(3,1)+r0;
+phi_da = lat_TF(4,1)+phi0;
+psi_da = lat_TF(5,1)+psi0;
 % TF  with rudder
-beta_dr = lat_TF(1,2);
-p_dr = lat_TF(2,2);
-r_dr = lat_TF(3,2);
-phi_dr = lat_TF(4,2);
-psi_dr = lat_TF(5,2);
+beta_dr = lat_TF(1,2)+beta0;
+p_dr = lat_TF(2,2)+p0;
+r_dr = lat_TF(3,2)+r0;
+phi_dr = lat_TF(4,2)+phi0;
+psi_dr = lat_TF(5,2)+psi0;
 %% Modes Approximation
 %% 3DOF mode spiral
 % States [p ; r ; phi]
@@ -76,10 +76,14 @@ Eigenvalues_3DOF_S= eig(A_3DOF_S);
 disp('Eigenvalues_3DOF_S:') 
 disp(Eigenvalues_3DOF_S)
 TF_3DOF_S = tf(ss_3DOF_S);
+% TF  with aliron
+p_da_3DOF_S = TF_3DOF_S(1,1)+p0;
+r_da_3DOF_S = TF_3DOF_S(2,1)+r0;
+phi_da_3DOF_S = TF_3DOF_S(3,1)+phi0;
 % TF  with ruder
-p_dr_3DOF_S = TF_3DOF_S(1,1);
-r_dr_3DOF_S = TF_3DOF_S(2,1);
-phi_dr_3DOF_S = TF_3DOF_S(3,1);
+p_dr_3DOF_S = TF_3DOF_S(1,2)+p0;
+r_dr_3DOF_S = TF_3DOF_S(2,2)+r0;
+phi_dr_3DOF_S = TF_3DOF_S(3,2)+phi0;
 
 %% 3DOF Dutch Roll mode 
 % States [beta ; p ; r]
@@ -99,13 +103,13 @@ disp('Eigenvalues_3DOF_D:')
 disp(Eigenvalues_3DOF_D)
 TF_3DOF_D = tf(ss_3DOF_D);
 % TF  with alieron 
-beta_da_3DOF_D = TF_3DOF_D(1,1);
-p_da_3DOF_D = TF_3DOF_D(2,1);
-r_da_3DOF_D = TF_3DOF_D(3,1);
+beta_da_3DOF_D = TF_3DOF_D(1,1)+beta0;
+p_da_3DOF_D = TF_3DOF_D(2,1)+p0;
+r_da_3DOF_D = TF_3DOF_D(3,1)+r0;
 % TF  with rudder
-beta_dr_3DOF_D = TF_3DOF_D(1,2);
-p_dr_3DOF_D = TF_3DOF_D(2,2);
-r_dr_3DOF_D = TF_3DOF_D(3,2);
+beta_dr_3DOF_D = TF_3DOF_D(1,2)+beta0;
+p_dr_3DOF_D = TF_3DOF_D(2,2)+p0;
+r_dr_3DOF_D = TF_3DOF_D(3,2)+r0;
 %%%%%
 %% 2DOF Dutch Roll Approximation 
 % States [beta ; r]   
@@ -123,11 +127,11 @@ disp('Eigenvalues_2DOF:')
 disp(Eigenvalues_2DOF)
 TF_2DOF = tf(ss_2DOF);
 % TF  with alieron 
-beta_da_2DOF = TF_2DOF(1,1);
-r_da_2DOF = TF_2DOF(2,1);
+beta_da_2DOF = TF_2DOF(1,1)+beta0;
+r_da_2DOF = TF_2DOF(2,1)+r0;
 % TF  with rudder
-beta_dr_2DOF = TF_2DOF(1,2);
-r_dr_2DOF = TF_2DOF(2,2);
+beta_dr_2DOF = TF_2DOF(1,2)+beta0;
+r_dr_2DOF = TF_2DOF(2,2)+r0;
 %%%%%%%%%%%%%%
 %% 1DOF Roll Approximation
 % states [ p ]
@@ -142,17 +146,21 @@ Eigenvalues_1DOF= eig(A_1DOF);
 disp('Eigenvalues_1DOF:') 
 disp(Eigenvalues_1DOF)
 TF_1DOF = tf(ss_1DOF);
-p_da_1DOF = TF_1DOF(1,1);
+p_da_1DOF = TF_1DOF(1,1)+p0;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Step response
 % change in the aileron deflection 
 aileron_inputs = deg2rad([1, 5, 10 ,25]); 
-tfinal = 200;
-T_final = 200;
+tfinal = 100;
+T_final = 100;
 t = linspace(0, T_final, 1000);
 filename = 'figures\Lateral Results\response\delta_a';
 
+delta_aileron = 0;
+delta_rudder = 0;
+delta_elevator =0;
+delta_thrust = 0;
 
 for j = 1:length(aileron_inputs) 
     aileron_input = aileron_inputs(j);
@@ -178,21 +186,21 @@ for j = 1:length(aileron_inputs)
     % beta
     subplot(2,1,1);
     hold on ;
-    plot(t, rad2deg(y_full(:,1)), 'b', 'LineWidth', 1.5);
-    plot(t, rad2deg(y_3DOF_D(:,1)), 'r', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_2DOF(:,1)), '--g', 'LineWidth', 1.5);
+    plot(t, rad2deg(y_full(:,1))+rad2deg(beta0), 'b', 'LineWidth', 1.5);
+    plot(t, rad2deg(y_3DOF_D(:,1))+rad2deg(beta0), 'r', 'LineWidth', 1.5); 
+    plot(t, rad2deg(y_2DOF(:,1))+rad2deg(beta0), '--g', 'LineWidth', 1.5);
     plot(simData{14}.time, simData{14}.data, '--m', 'LineWidth', 1.5);
     ylabel('\beta (deg)'); grid on;
     legend('Full model','3DOF Dutch Roll App','2DOF Dutch Roll App', 'Non Linear');
     % r 
     subplot(2,1,2);
     hold on;
-    plot(t, rad2deg(y_full(:,3)), 'b', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_3DOF_S(:,2)), 'k', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_3DOF_D(:,3)), 'r', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_2DOF(:,end)), '--g', 'LineWidth', 1.5);
-    plot(simData{6}.time, simData{6}.data, '--m', 'LineWidth', 1.5);
-    ylabel('r (deg/s)'); grid on;
+    plot(t, (y_full(:,3))+(r0), 'b', 'LineWidth', 1.5); 
+    plot(t, (y_3DOF_S(:,2))+(r0), 'k', 'LineWidth', 1.5); 
+    plot(t, (y_3DOF_D(:,3))+(r0), 'r', 'LineWidth', 1.5); 
+    plot(t, (y_2DOF(:,end))+(r0), '--g', 'LineWidth', 1.5);
+    plot(simData{6}.time, (simData{6}.data), '--m', 'LineWidth', 1.5);
+    ylabel('r (rad/s)'); grid on;
     legend('Full model','3DOF Spiral App', '3DOF Dutch Roll App','2DOF Roll App', 'Non Linear');
     sgtitle([' aileron deflection - \delta_a = ', num2str(rad2deg(aileron_input)), '°']);
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
@@ -203,18 +211,18 @@ for j = 1:length(aileron_inputs)
     % p 
     subplot(2,1,1);
     hold on;
-    plot(t, rad2deg(y_full(:,2)), 'b', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_3DOF_S(:,1)), 'k', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_3DOF_D(:,2)), 'r', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_1DOF(:,1)), 'g', 'LineWidth', 1.5);
-    plot(simData{4}.time, simData{4}.data, '--m', 'LineWidth', 1.5);
-    ylabel('p (deg/s)'); grid on;
+    plot(t, (y_full(:,2))+(p0), 'b', 'LineWidth', 1.5); 
+    plot(t, (y_3DOF_S(:,1))+(p0), 'k', 'LineWidth', 1.5); 
+    plot(t, (y_3DOF_D(:,2))+(p0), 'r', 'LineWidth', 1.5); 
+    plot(t, (y_1DOF(:,1))+(p0), 'g', 'LineWidth', 1.5);
+    plot(simData{4}.time, (simData{4}.data), '--m', 'LineWidth', 1.5);
+    ylabel('p (rad/s)'); grid on;
     legend('Full model','3DOF Spiral App', '3DOF Dutch Roll App','1DOF Roll App', 'Non Linear');
     % ϕ 
     subplot(2,1,2);
     hold on ;
-    plot(t, rad2deg(y_full(:,4)), 'b', 'LineWidth', 1.5);
-    plot(t, rad2deg(y_3DOF_S(:,3)), 'k', 'LineWidth', 1.5); 
+    plot(t, rad2deg(y_full(:,4))+rad2deg(phi0), 'b', 'LineWidth', 1.5);
+    plot(t, rad2deg(y_3DOF_S(:,3))+rad2deg(phi0), 'k', 'LineWidth', 1.5); 
     plot(simData{7}.time, simData{7}.data, '--m', 'LineWidth', 1.5);
     ylabel('\phi (deg)'); xlabel('Time (seconds)'); grid on;
     legend('Full model', '3DOF Spiral App','Non Linear');
@@ -225,9 +233,13 @@ end
 
 %% change in the rudder deflection 
 rudder_inputs = deg2rad([1, 5, 10, 25]); 
-T_final = 200;
+T_final = 100;
 t = linspace(0, T_final, 1000);
 filename = 'figures\Lateral Results\response\delta_r';
+delta_aileron = 0;
+delta_rudder = 0;
+delta_elevator =0;
+delta_thrust = 0;
 for j = 1:length(rudder_inputs) 
     rudder_input = rudder_inputs(j);
     SS_Lat_rudder_input = lat_ss(:,2);
@@ -241,7 +253,7 @@ for j = 1:length(rudder_inputs)
                    simOut.alpha_simulink, simOut.beta_simulink};
 
     [y_full, t] = step(SS_Lat_rudder_input * rudder_input, t);
-    [y_3DOF_S, t] = step(ss_3DOF_S(:,1) * rudder_input, t);
+    [y_3DOF_S, t] = step(ss_3DOF_S(:,2) * rudder_input, t);
     [y_3DOF_D, t] = step(ss_3DOF_D(:,2) * rudder_input, t);
     [y_2DOF, t] = step(ss_2DOF(:,2) * rudder_input, t);
     % Figure 1: (beta, r)
@@ -249,21 +261,21 @@ for j = 1:length(rudder_inputs)
     % beta 
     subplot(2,1,1);
     hold on ;
-    plot(t, rad2deg(y_full(:,1)), 'b', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_3DOF_D(:,1)), 'r', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_2DOF(:,1)), '--g', 'LineWidth', 1.5);
+    plot(t, rad2deg(y_full(:,1))+rad2deg(beta0), 'b', 'LineWidth', 1.5); 
+    plot(t, rad2deg(y_3DOF_D(:,1))+rad2deg(beta0), 'r', 'LineWidth', 1.5); 
+    plot(t, rad2deg(y_2DOF(:,1))+rad2deg(beta0), '--g', 'LineWidth', 1.5);
     plot(simData{14}.time, simData{14}.data, '--m', 'LineWidth', 1.5);
     ylabel('\beta (deg)'); grid on;
     legend('Full model', '3DOF Dutch Roll App','2DOF Dutch Roll App', 'Non Linear');
     % r 
     subplot(2,1,2);
     hold on;
-    plot(t, rad2deg(y_full(:,3)), 'b', 'LineWidth', 1.5);
-    plot(t, rad2deg(y_3DOF_S(:,2)), 'k', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_3DOF_D(:,3)), 'r', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_2DOF(:,2)), '--g', 'LineWidth', 1.5);
-    plot(simData{6}.time, simData{6}.data, '--m', 'LineWidth', 1.5);
-    ylabel('r (deg/s)'); grid on;
+    plot(t, (y_full(:,3))+(r0), 'b', 'LineWidth', 1.5);
+    plot(t, (y_3DOF_S(:,2))+(r0), 'k', 'LineWidth', 1.5); 
+    plot(t, (y_3DOF_D(:,3))+(r0), 'r', 'LineWidth', 1.5); 
+    plot(t, (y_2DOF(:,2))+(r0), '--g', 'LineWidth', 1.5);
+    plot(simData{6}.time, (simData{6}.data), '--m', 'LineWidth', 1.5);
+    ylabel('r (rad/s)'); grid on;
     legend('Full model', '3DOF Spiral App','3DOF Dutch Roll App','2DOF Roll App', 'Non Linear');
     sgtitle([' Rudder deflection - \delta_r = ', num2str(rad2deg(rudder_input)), '°']);
     set(findall(gcf,'type','line'),'linewidth',1.7);grid on ;legend ;
@@ -274,18 +286,18 @@ for j = 1:length(rudder_inputs)
     % p 
    subplot(2,1,1);
     hold on;
-    plot(t, rad2deg(y_full(:,2)), 'b', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_3DOF_S(:,1)), 'k-.', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_3DOF_D(:,2)), '--r', 'LineWidth', 1.5); 
-    plot(t, rad2deg(y_1DOF(:,1)), 'g', 'LineWidth', 1.5);
-    plot(simData{5}.time, simData{5}.data, '--m', 'LineWidth', 1.5);
-    ylabel('p (deg/s)'); grid on;
-    legend('Full model','3DOF Spiral App', '3DOF Dutch Roll App','1DOF Roll App', 'Non Linear');
+    plot(t, (y_full(:,2))+(p0), 'b', 'LineWidth', 1.5); 
+    plot(t, (y_3DOF_S(:,1))+(p0), 'k-.', 'LineWidth', 1.5); 
+    plot(t, (y_3DOF_D(:,2))+(p0), '--r', 'LineWidth', 1.5); 
+    plot(simData{4}.time, (simData{4}.data), '--m', 'LineWidth', 1.5);
+    %plot(t, (y_1DOF(:,1))+(p0), 'g', 'LineWidth', 1.5);
+    ylabel('p (rad/s)'); grid on;
+    legend('Full model','3DOF Spiral App', '3DOF Dutch Roll App','Non Linear','1DOF Roll App');
     % ϕ 
     subplot(2,1,2);
     hold on ;
-    plot(t, rad2deg(y_full(:,4)), 'b', 'LineWidth', 1.5);
-    plot(t, rad2deg(y_3DOF_S(:,1)), 'k', 'LineWidth', 1.5);
+    plot(t, rad2deg(y_full(:,4))+rad2deg(phi0), 'b', 'LineWidth', 1.5);
+    plot(t, rad2deg(y_3DOF_S(:,3))+rad2deg(phi0), 'k', 'LineWidth', 1.5);
     plot(simData{7}.time, simData{7}.data, '--m', 'LineWidth', 1.5);
     ylabel('\phi (deg)'); xlabel('Time (seconds)'); grid on;
     legend('Full model','3DOF Spiral App', 'Non Linear');
@@ -296,7 +308,6 @@ end
 % 
 %%
 % Root locus for Lateral Dynamics (Aileron Only)
-
 RL_a_filename = 'figures\Lateral Results\Root Locus\delta_a';
 
 variable_names = {'\beta', 'p', 'r', '\phi', '\psi'};
@@ -304,69 +315,99 @@ full_model_groups = {beta_da, p_da, r_da, phi_da, psi_da};
 dutch_3DOF_groups = {beta_da_3DOF_D, p_da_3DOF_D, r_da_3DOF_D, [], []}; 
 dutch_2DOF_groups = {beta_da_2DOF, [], r_da_2DOF, [], []}; 
 roll_1DOF_group = {[], p_da_1DOF, [], [], []}; 
+spiral_3DOF_groups = {[], p_da_3DOF_S, r_da_3DOF_S, phi_da_3DOF_S, []};
 
 for i = 1:5
-    figure( 'units','normalized','outerposition',[0 0 1 1])
-        folderPath = fullfile(RL_a_filename, variable_names{i});
-        if ~exist(folderPath, 'dir')
-            mkdir(folderPath);
-        end
+    figure('units','normalized','outerposition',[0 0 1 1])
+    folderPath = fullfile(RL_a_filename, variable_names{i});
+    if ~exist(folderPath, 'dir')
+        mkdir(folderPath);
+    end
 
+    % Special case: ψ (psi)
     if i == 5  
         rlocus(full_model_groups{i});
         title(['(', variable_names{i}, ') Full Model (Aileron)'], 'Interpreter', 'none');
-        set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
-        saveas(gcf,fullfile(RL_a_filename,strcat(variable_names{i}, '/\delta_{a} ','.png')));
+        set(findall(gcf,'type','line'),'linewidth',1.5); grid on;
+        saveas(gcf, fullfile(RL_a_filename, strcat(variable_names{i}, '/\delta_{a} ','.png')));
         continue;
     end
 
-    if i == 4  
+    % Special case: φ (phi) --> Full + Spiral (using subplot instead of tiledlayout)
+    if i == 4
+        subplot(1,2,1)
         rlocus(full_model_groups{i});
         title(['(', variable_names{i}, ') Full Model (Aileron)'], 'Interpreter', 'none');
-        set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
-        saveas(gcf,fullfile(RL_a_filename,strcat(variable_names{i}, '/\delta_{a} ','.png')));
+        set(findall(gcf,'type','line'),'linewidth',1.5); grid on;
+        xlabel('Real Axis (seconds^{-1})')
+        ylabel('Imaginary Axis (seconds^{-1})')
 
+        subplot(1,2,2)
+        rlocus(spiral_3DOF_groups{i});
+        title(['(', variable_names{i}, ') Spiral Mode (Aileron)'], 'Interpreter', 'none');
+        set(findall(gcf,'type','line'),'linewidth',1.5); grid on;
+        xlabel('Real Axis (seconds^{-1})')
+        ylabel('Imaginary Axis (seconds^{-1})')
+
+        saveas(gcf, fullfile(RL_a_filename, strcat(variable_names{i}, '/\delta_{a} ','.png')));
         continue;
     end
 
-   % For other cases: Use a 2×2 layout
-    subplot(2,2,1);
+   %%%
+    subplot_idx = 1;
+
+    % Full model
+    subplot(2,2,subplot_idx);
     rlocus(full_model_groups{i});
     title(['(', variable_names{i}, ') Full Model (Aileron)'], 'Interpreter', 'none');
-    set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
+    set(findall(gcf,'type','line'),'linewidth',1.5); grid on;
+    subplot_idx = subplot_idx + 1;
 
+    % Dutch 3DOF
     if i <= length(dutch_3DOF_groups) && ~isempty(dutch_3DOF_groups{i})
-        subplot(2,2,2);
+        subplot(2,2,subplot_idx);
         rlocus(dutch_3DOF_groups{i});
         title(['(', variable_names{i}, ') Dutch Roll 3DOF (Aileron)'], 'Interpreter', 'none');
-        set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
-        saveas(gcf,fullfile(RL_a_filename,strcat(variable_names{i}, '/\delta_{a} ','.png')));
+        set(findall(gcf,'type','line'),'linewidth',1.5); grid on;
+        subplot_idx = subplot_idx + 1;
     end
 
+    % Dutch 2DOF
     if i <= length(dutch_2DOF_groups) && ~isempty(dutch_2DOF_groups{i})
-        subplot(2,2,3);
+        subplot(2,2,subplot_idx);
         rlocus(dutch_2DOF_groups{i});
         title(['(', variable_names{i}, ') Dutch Roll 2DOF (Aileron)'], 'Interpreter', 'none');
-        set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
-        saveas(gcf,fullfile(RL_a_filename,strcat(variable_names{i}, '/\delta_{a} ','.png')));
-
+        set(findall(gcf,'type','line'),'linewidth',1.5); grid on;
+        subplot_idx = subplot_idx + 1;
     end
 
+    % Spiral 3DOF
+    if i <= length(spiral_3DOF_groups) && ~isempty(spiral_3DOF_groups{i})
+        subplot(2,2,subplot_idx);
+        rlocus(spiral_3DOF_groups{i});
+        title(['(', variable_names{i}, ') Spiral Mode (Aileron)'], 'Interpreter', 'none');
+        set(findall(gcf,'type','line'),'linewidth',1.5); grid on;
+        subplot_idx = subplot_idx + 1;
+    end
+
+    % Roll 1DOF
     if i == 2 && ~isempty(roll_1DOF_group{i})
-        subplot(2,2,4);
+        subplot(2,2,subplot_idx);
         rlocus(roll_1DOF_group{i});
         title(['(', variable_names{i}, ') Roll Mode (Aileron)'], 'Interpreter', 'none');
-        set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
-        saveas(gcf,fullfile(RL_a_filename,strcat(variable_names{i}, '/\delta_{a} ','.png')));
-
+        set(findall(gcf,'type','line'),'linewidth',1.5); grid on;
     end
+
+    saveas(gcf, fullfile(RL_a_filename, strcat(variable_names{i}, '/\delta_{a} ','.png')));
 end
+
+
 % Root locus for Lateral Dynamics (Rudder Only)
 
 RL_r_filename = 'figures\Lateral Results\Root Locus\delta_r';
 variable_names = {'\beta', 'p', 'r', '\phi', '\psi'};
 full_model_groups = {beta_dr, p_dr, r_dr, phi_dr, psi_dr}; 
-spiral_groups = {[], p_dr_3DOF_S, r_dr_3DOF_S, phi_dr_3DOF_S, []}; % Spiral mode موجود فقط لبعض المتغيرات
+spiral_3DOF_groups = {[], p_dr_3DOF_S, r_dr_3DOF_S, phi_dr_3DOF_S, []}; % Spiral mode موجود فقط لبعض المتغيرات
 dutch_3DOF_groups = {beta_dr_3DOF_D, p_dr_3DOF_D, r_dr_3DOF_D, [], []}; 
 dutch_2DOF_groups = {beta_dr_2DOF, [], r_dr_2DOF, [], []}; 
 
@@ -393,7 +434,7 @@ for i = 1:5
         set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
 
         subplot(1,2,2);
-        rlocus(spiral_groups{i});
+        rlocus(spiral_3DOF_groups{i});
         title(['(', variable_names{i}, ') Spiral Mode (Rudder)'], 'Interpreter', 'none');
         set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
         saveas(gcf,fullfile(RL_r_filename,strcat(variable_names{i}, '/\delta_{r} ','.png')));
@@ -407,9 +448,9 @@ for i = 1:5
     title(['(', variable_names{i}, ') Full Model (Rudder)'], 'Interpreter', 'none');
     set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
 
-    if i <= length(spiral_groups) && ~isempty(spiral_groups{i})
+    if i <= length(spiral_3DOF_groups) && ~isempty(spiral_3DOF_groups{i})
         subplot(2,2,2);
-        rlocus(spiral_groups{i});
+        rlocus(spiral_3DOF_groups{i});
         title(['(', variable_names{i}, ') Spiral Mode (Rudder)'], 'Interpreter', 'none');
         set(findall(gcf,'type','line'),'linewidth',1.5);grid on ;
         saveas(gcf,fullfile(RL_r_filename,strcat(variable_names{i}, '/\delta_{r} ','.png')));
@@ -435,7 +476,6 @@ for i = 1:5
     end
 end
 %% Bode Plot for Lateral Dynamics (Aileron Only)
-
 %%% bode plot (delta_Aileron)
 Bode_a_filename = 'figures\Lateral Results\Bode Plots\Aileron';
 variable_names = {'\beta', 'p', 'r', '\phi', '\psi'};
@@ -443,6 +483,7 @@ full_model_groups = {beta_da, p_da, r_da, phi_da, psi_da};
 dutch_3DOF_groups = {beta_da_3DOF_D, p_da_3DOF_D, r_da_3DOF_D, [], []}; 
 dutch_2DOF_groups = {beta_da_2DOF, [], r_da_2DOF, [], []}; 
 roll_1DOF_group = {[], p_da_1DOF, [], [], []}; 
+spiral_3DOF_groups = {[], p_da_3DOF_S, r_da_3DOF_S, phi_da_3DOF_S, []}; % New Spiral 3DOF group
 
 for i = 1:5
     figure('units','normalized','outerposition',[0 0 1 1])
@@ -451,24 +492,34 @@ for i = 1:5
         mkdir(folderPath);
     end
 
-    bode(full_model_groups{i}, 'b'); hold on; % Full Model 
+    labels = {}; % initialize legend labels
+
+    bode(full_model_groups{i}, 'b'); hold on;
+    labels{end+1} = 'Full Model';
 
     if i <= length(dutch_3DOF_groups) && ~isempty(dutch_3DOF_groups{i})
-        bode(dutch_3DOF_groups{i}, 'r--');hold on; % Dutch Roll 3DOF 
+        bode(dutch_3DOF_groups{i}, 'r--'); hold on;
+        labels{end+1} = 'Dutch Roll 3DOF';
     end
     if i <= length(dutch_2DOF_groups) && ~isempty(dutch_2DOF_groups{i})
-        bode(dutch_2DOF_groups{i}, 'k-.');hold on; % Dutch Roll 2DOF 
+        bode(dutch_2DOF_groups{i}, 'k-.'); hold on;
+        labels{end+1} = 'Dutch Roll 2DOF';
     end
     if i == 2 && ~isempty(roll_1DOF_group{i})
-        bode(roll_1DOF_group{i}, 'g:');% Roll Mode 
+        bode(roll_1DOF_group{i}, 'g:'); hold on;
+        labels{end+1} = 'Roll Mode';
     end
-    
+    if i <= length(spiral_3DOF_groups) && ~isempty(spiral_3DOF_groups{i})
+        bode(spiral_3DOF_groups{i}, 'm--'); hold on;
+        labels{end+1} = 'Spiral Mode';
+    end
+
     hold off;
     title(['(', variable_names{i}, ') Bode Plot Comparison (Aileron)'], 'Interpreter', 'none');
-    legend('Full Model', 'Dutch Roll 3DOF', 'Dutch Roll 2DOF', 'Roll Mode');
+    legend(labels, 'Location', 'best');
     set(findall(gcf,'type','line'),'linewidth',1.5);
     grid on;
-    
+
     saveas(gcf, fullfile(Bode_a_filename, strcat(variable_names{i}, '/\delta_{a} ','.png')));
 end
 
@@ -476,7 +527,7 @@ end
 Bode_r_filename = 'figures\Lateral Results\Bode Plots\Rudder';
 variable_names = {'\beta', 'p', 'r', '\phi', '\psi'};
 full_model_groups = {beta_dr, p_dr, r_dr, phi_dr, psi_dr}; 
-spiral_groups = {[], p_dr_3DOF_S, r_dr_3DOF_S, phi_dr_3DOF_S, []}; 
+spiral_3DOF_groups = {[], p_dr_3DOF_S, r_dr_3DOF_S, phi_dr_3DOF_S, []}; 
 dutch_3DOF_groups = {beta_dr_3DOF_D, p_dr_3DOF_D, r_dr_3DOF_D, [], []}; 
 dutch_2DOF_groups = {beta_dr_2DOF, [], r_dr_2DOF, [], []}; 
 
@@ -492,8 +543,8 @@ for i = 1:5
     bode(full_model_groups{i}, 'b'); hold on;
     labels{end+1} = 'Full Model';
 
-    if i <= length(spiral_groups) && ~isempty(spiral_groups{i})
-        bode(spiral_groups{i}, 'm--'); hold on;
+    if i <= length(spiral_3DOF_groups) && ~isempty(spiral_3DOF_groups{i})
+        bode(spiral_3DOF_groups{i}, 'm--'); hold on;
         labels{end+1} = 'Spiral Mode';
     end
     if i <= length(dutch_3DOF_groups) && ~isempty(dutch_3DOF_groups{i})
