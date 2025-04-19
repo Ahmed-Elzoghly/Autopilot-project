@@ -2,6 +2,7 @@ clc; clearvars; close all;
 
 %% Select Plane and Flight Condition
 addpath('Planes_Data');
+addpath('Control design');
 addpath('Validation');
 Plane_data_file = 'B747_FC5';
 %Plane_data_file = 'Jetstar_FC3';
