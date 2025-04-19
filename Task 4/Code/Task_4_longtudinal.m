@@ -85,7 +85,7 @@ Long_lp_TF = tf(Long_lp_ss);
 % elevator TF 
 u_de_lp = Long_lp_TF(1,1)+u0;
 theta_de_lp = Long_lp_TF(2,1)+theta0;
-% Thrustor
+% Thrust Tf
 u_dth_lp = Long_lp_TF(1,2)+u0;
 theta_dth_lp = Long_lp_TF(2,2)+theta0;
 %%%%%%%%
